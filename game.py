@@ -25,7 +25,7 @@ textures = {
 }
 
 for name in textures:
-    textures[name] = pygame.image.load(textures[name])
+    textures[name] = pygame.image.load("textures/" + textures[name])
 
 # Map
 tilemap = [

@@ -1,6 +1,9 @@
 import pygame
+
 import os
-from pygame.locals import *
+import sys
+
+import assets
 from player import Player
 
 # Init
@@ -14,36 +17,38 @@ winsize = [display.current_w, display.current_h - 20]
 os.environ['SDL_VIDEO_WINDOW_POS'] = '%i,%i' % (display.current_w / 2, display.current_h)
 os.environ['SDL_VIDEO_CENTERED'] = '0'
 
-screen = pygame.display.set_mode(winsize, RESIZABLE)
+screen = pygame.display.set_mode(winsize, pygame.RESIZABLE)
 
 # Constants
 SCALE = 4
 
 # Textures
 textures = {
-    "STONE": "tile.png",
-    "CHARACTER": "character.png"
+    "tile.png",
+    "character.png"
 }
 
-for name in textures:
-    textures[name] = pygame.image.load("textures/" + textures[name])
+for filename in textures:
+    assets.load(filename)
 
 # Map
+STONE = "tile.png"
+
 tilemap = [
-    ["STONE", "STONE", "STONE", "STONE", "STONE", "STONE"],
-    ["STONE", "STONE", "STONE", "STONE", "STONE", "STONE"],
-    ["STONE", "STONE", "STONE", "STONE", "STONE", "STONE"],
-    ["STONE", "STONE", "STONE", "STONE", "STONE", "STONE"],
-    ["STONE", "STONE", "STONE", "STONE", "STONE", "STONE"],
-    ["STONE", "STONE", "STONE", "STONE", "STONE", "STONE"],
+    [STONE, STONE, STONE, STONE, STONE, STONE],
+    [STONE, STONE, STONE, STONE, STONE, STONE],
+    [STONE, STONE, STONE, STONE, STONE, STONE],
+    [STONE, STONE, STONE, STONE, STONE, STONE],
+    [STONE, STONE, STONE, STONE, STONE, STONE],
+    [STONE, STONE, STONE, STONE, STONE, STONE],
 ]
 
-player = {
-    "texture": textures["CHARACTER"],
-    "rect": textures["CHARACTER"].get_rect()
-}
+# player = {
+#     "texture": assets.get("character.png"),
+#     "rect": assets.get("character.png").get_rect()
+# }
 
-test_player = Player()
+player = Player("character.png")
 
 # Mainloop
 time = pygame.time.get_ticks()
@@ -64,7 +69,7 @@ while 1:
 
     for row in range(len(tilemap)):
         for column in range(len(tilemap[row])):
-            texture = textures[tilemap[row][column]]
+            texture = assets.get(tilemap[row][column])
             tilesize = texture.get_rect().size[0]
             screen.blit(pygame.transform.scale(texture, (SCALE * tilesize, SCALE * tilesize)),
                         (column * SCALE * tilesize, row * SCALE * tilesize))
@@ -72,17 +77,23 @@ while 1:
 
     keys = pygame.key.get_pressed()
 
-    if keys[K_DOWN]:
-        player["rect"].y = player["rect"].y + 10
+    pos = player.get_pos()
+
+    if keys[pygame.K_DOWN]:
+        # player["rect"].y = player["rect"].y + 10
+        player.set_pos(pos.x, pos.y + 10)
     
-    if keys[K_UP]:
-        player["rect"].y = player["rect"].y - 10
+    if keys[pygame.K_UP]:
+        # player["rect"].y = player["rect"].y - 10
+        player.set_pos(pos.x, pos.y - 10)
 
-    if keys[K_LEFT]:
-        player["rect"].x = player["rect"].x - 10
+    if keys[pygame.K_LEFT]:
+        # player["rect"].x = player["rect"].x - 10
+        player.set_pos(pos.x - 10, pos.y)
 
-    if keys[K_RIGHT]:
-        player["rect"].x = player["rect"].x + 10 
+    if keys[pygame.K_RIGHT]:
+        # player["rect"].x = player["rect"].x + 10
+        player.set_pos(pos.x + 10, pos.y)
 
     screen.blit(pygame.transform.scale(player["texture"], (SCALE * tilesize, SCALE * tilesize)), player["rect"])
 

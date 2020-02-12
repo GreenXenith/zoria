@@ -1,6 +1,7 @@
 import pygame
 import os
 from pygame.locals import *
+from player import Player
 
 # Init
 pygame.init()
@@ -41,6 +42,8 @@ player = {
     "texture": textures["CHARACTER"],
     "rect": textures["CHARACTER"].get_rect()
 }
+
+test_player = Player()
 
 # Mainloop
 time = pygame.time.get_ticks()

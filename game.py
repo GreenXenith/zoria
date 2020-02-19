@@ -4,7 +4,6 @@ import os
 import sys
 
 import assets
-from player import Player
 
 # Init
 pygame.init()
@@ -48,6 +47,7 @@ tilemap = [
 #     "rect": assets.get("character.png").get_rect()
 # }
 
+from player import Player
 player = Player("character.png")
 
 # Mainloop
@@ -81,20 +81,20 @@ while 1:
 
     if keys[pygame.K_DOWN]:
         # player["rect"].y = player["rect"].y + 10
-        player.set_pos(pos.x, pos.y + 10)
+        player.set_pos(pos["x"], pos["y"] + 10)
     
     if keys[pygame.K_UP]:
         # player["rect"].y = player["rect"].y - 10
-        player.set_pos(pos.x, pos.y - 10)
+        player.set_pos(pos["x"], pos["y"] - 10)
 
     if keys[pygame.K_LEFT]:
         # player["rect"].x = player["rect"].x - 10
-        player.set_pos(pos.x - 10, pos.y)
+        player.set_pos(pos["x"] - 10, pos["y"])
 
     if keys[pygame.K_RIGHT]:
         # player["rect"].x = player["rect"].x + 10
-        player.set_pos(pos.x + 10, pos.y)
+        player.set_pos(pos["x"] + 10, pos["y"])
 
-    screen.blit(pygame.transform.scale(player["texture"], (SCALE * tilesize, SCALE * tilesize)), player["rect"])
+    screen.blit(pygame.transform.scale(player.sprite.texture, (SCALE * tilesize, SCALE * tilesize)), player.sprite.rect)
 
     pygame.display.flip()

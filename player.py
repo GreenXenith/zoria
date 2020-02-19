@@ -9,6 +9,8 @@ class Player:
     mp = 50
     xp = 0
 
+    speed = 2 # meters per second
+
     def set_pos(self, x, y):
         self.x = x
         self.y = y

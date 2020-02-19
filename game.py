@@ -3,6 +3,11 @@ import os
 import sys
 import assets
 
+# Constants
+SCALE = 4
+METER = 32
+FPS = 60
+
 # Init
 pygame.init()
 pygame.font.init()
@@ -15,9 +20,6 @@ os.environ['SDL_VIDEO_WINDOW_POS'] = '%i,%i' % (display.current_w / 2, display.c
 os.environ['SDL_VIDEO_CENTERED'] = '0'
 
 screen = pygame.display.set_mode(winsize, pygame.RESIZABLE)
-
-# Constants
-SCALE = 4
 
 # Textures
 textures = {
@@ -45,13 +47,12 @@ from player import Player
 player = Player("character.png")
 
 # Mainloop
-time = pygame.time.get_ticks()
+clock = pygame.time.Clock()
 while 1:
+    dtime = clock.tick(FPS) / 1000.0
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
-
-    dtime = pygame.time.get_ticks() - time
-    time = pygame.time.get_ticks()
 
     # rect = rect.move(speed[0] * dtime, speed[1] * dtime)
     # if rect.left < 0 or rect.right > width:
@@ -65,16 +66,16 @@ while 1:
     pos = player.get_pos()
 
     if controller.is_down("up"):
-        player.set_pos(pos["x"], pos["y"] - 10 * dtime)
+        player.set_pos(pos["x"], pos["y"] - player.speed * SCALE * METER * dtime)
 
     if controller.is_down("down"):
-        player.set_pos(pos["x"], pos["y"] + 10 * dtime)
+        player.set_pos(pos["x"], pos["y"] + player.speed * SCALE * METER * dtime)
 
     if controller.is_down("left"):
-        player.set_pos(pos["x"] - 10 * dtime, pos["y"])
+        player.set_pos(pos["x"] - player.speed * SCALE * METER * dtime, pos["y"])
 
     if controller.is_down("right"):
-        player.set_pos(pos["x"] + 10 * dtime, pos["y"])
+        player.set_pos(pos["x"] + player.speed * SCALE * METER * dtime, pos["y"])
 
     # Draw the map based on player position
     pos = player.get_pos()

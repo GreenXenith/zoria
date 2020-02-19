@@ -40,6 +40,9 @@ tilemap = map.map["map"]
 import controller
 from player import Player
 player = Player("character.png")
+player.set_pos(1 * 32 * SCALE, 1 * 32 * SCALE)
+
+CENTER = [display.current_w / 2, display.current_h / 2]
 
 # Mainloop
 clock = pygame.time.Clock()
@@ -61,27 +64,34 @@ while 1:
     pos = player.get_pos()
 
     if controller.is_down("up"):
-        player.set_pos(pos["x"], pos["y"] - player.speed * SCALE * METER * dtime)
+        newy = pos["y"] - player.speed * SCALE * METER * dtime
+        player.set_pos(pos["x"], newy)
 
     if controller.is_down("down"):
-        player.set_pos(pos["x"], pos["y"] + player.speed * SCALE * METER * dtime)
+        newy = pos["y"] + player.speed * SCALE * METER * dtime
+        player.set_pos(pos["x"], newy)
 
     if controller.is_down("left"):
-        player.set_pos(pos["x"] - player.speed * SCALE * METER * dtime, pos["y"])
+        newx = pos["x"] - player.speed * SCALE * METER * dtime
+        player.set_pos(newx, pos["y"])
 
     if controller.is_down("right"):
-        player.set_pos(pos["x"] + player.speed * SCALE * METER * dtime, pos["y"])
+        newx = pos["x"] + player.speed * SCALE * METER * dtime
+        player.set_pos(newx, pos["y"])
 
-    # Draw the map based on player position
+    # Move the map based on player position
     pos = player.get_pos()
+    psize = player.sprite.texture.get_rect().size
+
+    camera = [CENTER[0] - (psize[0] / 2 * SCALE), CENTER[1] - (psize[1] / 2 * SCALE)]
+
     for row in range(len(tilemap)):
         for column in range(len(tilemap[row])):
             texture = assets.get(map.map["tiles"][tilemap[row][column]]["texture"])
             tilesize = texture.get_rect().size[0]
-            screen.blit(pygame.transform.scale(texture, (SCALE * tilesize, SCALE * tilesize)), (column * SCALE * tilesize - pos["x"], row * SCALE * tilesize - pos["y"]))
+            screen.blit(pygame.transform.scale(texture, (SCALE * tilesize, SCALE * tilesize)), (column * SCALE * tilesize - pos["x"] + camera[0], row * SCALE * tilesize - pos["y"] + camera[1]))
 
-    # Draw player in center of screen
-    size = player.sprite.texture.get_rect().size
-    screen.blit(pygame.transform.scale(player.sprite.texture, (SCALE * tilesize, SCALE * tilesize)), [display.current_w / 2 - (size[0] / 2 * SCALE), display.current_h / 2 - (size[1] / 2 * SCALE)])
+    # Draw player based on camera position
+    screen.blit(pygame.transform.scale(player.sprite.texture, (SCALE * tilesize, SCALE * tilesize)), camera)
 
     pygame.display.flip()

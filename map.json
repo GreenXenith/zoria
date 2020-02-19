@@ -1,0 +1,50 @@
+{
+    "tiles": [
+        {
+            "solid": false,
+            "texture": "floor_cobble.png"
+        },
+        {
+            "solid": true,
+            "texture": "wall_cobble_down.png"
+        },
+        {
+            "solid": true,
+            "texture": "wall_cobble_right.png"
+        },
+        {
+            "solid": true,
+            "texture": "wall_cobble_up.png"
+        },
+        {
+            "solid": true,
+            "texture": "wall_cobble_left.png"
+        },
+        {
+            "solid": true,
+            "texture": "wall_cobble_corner_nw.png"
+        },
+        {
+            "solid": true,
+            "texture": "wall_cobble_corner_ne.png"
+        },
+        {
+            "solid": true,
+            "texture": "wall_cobble_corner_se.png"
+        },
+        {
+            "solid": true,
+            "texture": "wall_cobble_corner_sw.png"
+        }
+    ],
+    "map": [
+        [5, 1, 1, 1, 1, 1, 1, 6],
+        [2, 0, 0, 0, 0, 0, 0, 4],
+        [2, 0, 0, 0, 0, 0, 0, 4],
+        [2, 0, 0, 0, 0, 0, 0, 4],
+        [2, 0, 0, 0, 0, 0, 0, 4],
+        [2, 0, 0, 0, 0, 0, 0, 4],
+        [2, 0, 0, 0, 0, 0, 0, 4],
+        [8, 3, 3, 3, 3, 3, 3, 7]
+    ]
+}

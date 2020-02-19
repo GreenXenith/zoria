@@ -23,7 +23,7 @@ screen = pygame.display.set_mode(winsize, pygame.RESIZABLE)
 
 # Textures
 textures = {
-    "tile.png",
+    "floor_cobble.png",
     "character.png"
 }
 
@@ -31,16 +31,11 @@ for filename in textures:
     assets.load(filename)
 
 # Map
-STONE = "tile.png"
+from map import Map
+map = Map()
+map.load("map.json")
 
-tilemap = [
-    [STONE, STONE, STONE, STONE, STONE, STONE],
-    [STONE, STONE, STONE, STONE, STONE, STONE],
-    [STONE, STONE, STONE, STONE, STONE, STONE],
-    [STONE, STONE, STONE, STONE, STONE, STONE],
-    [STONE, STONE, STONE, STONE, STONE, STONE],
-    [STONE, STONE, STONE, STONE, STONE, STONE],
-]
+tilemap = map.map["map"]
 
 import controller
 from player import Player
@@ -79,13 +74,11 @@ while 1:
 
     # Draw the map based on player position
     pos = player.get_pos()
-    print(pos)
     for row in range(len(tilemap)):
         for column in range(len(tilemap[row])):
-            texture = assets.get(tilemap[row][column])
+            texture = assets.get(map.map["tiles"][tilemap[row][column]]["texture"])
             tilesize = texture.get_rect().size[0]
-            screen.blit(pygame.transform.scale(texture, (SCALE * tilesize, SCALE * tilesize)),
-                        (column * SCALE * tilesize - pos["x"], row * SCALE * tilesize - pos["y"]))
+            screen.blit(pygame.transform.scale(texture, (SCALE * tilesize, SCALE * tilesize)), (column * SCALE * tilesize - pos["x"], row * SCALE * tilesize - pos["y"]))
 
     # Draw player in center of screen
     size = player.sprite.texture.get_rect().size

@@ -42,13 +42,10 @@ tilemap = [
     [STONE, STONE, STONE, STONE, STONE, STONE],
 ]
 
-# player = {
-#     "texture": assets.get("character.png"),
-#     "rect": assets.get("character.png").get_rect()
-# }
-
 from player import Player
 player = Player("character.png")
+
+import controller
 
 # Mainloop
 time = pygame.time.get_ticks()
@@ -76,23 +73,18 @@ while 1:
 
 
     keys = pygame.key.get_pressed()
-
     pos = player.get_pos()
-
-    if keys[pygame.K_DOWN]:
-        # player["rect"].y = player["rect"].y + 10
-        player.set_pos(pos["x"], pos["y"] + 10)
     
-    if keys[pygame.K_UP]:
-        # player["rect"].y = player["rect"].y - 10
+    if controller.is_down("up"):
         player.set_pos(pos["x"], pos["y"] - 10)
 
-    if keys[pygame.K_LEFT]:
-        # player["rect"].x = player["rect"].x - 10
+    if controller.is_down("down"):
+        player.set_pos(pos["x"], pos["y"] + 10)
+
+    if controller.is_down("left"):
         player.set_pos(pos["x"] - 10, pos["y"])
 
-    if keys[pygame.K_RIGHT]:
-        # player["rect"].x = player["rect"].x + 10
+    if controller.is_down("right"):
         player.set_pos(pos["x"] + 10, pos["y"])
 
     screen.blit(pygame.transform.scale(player.sprite.texture, (SCALE * tilesize, SCALE * tilesize)), player.sprite.rect)

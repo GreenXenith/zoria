@@ -1,8 +1,6 @@
 import pygame
-
 import os
 import sys
-
 import assets
 
 # Init
@@ -42,10 +40,9 @@ tilemap = [
     [STONE, STONE, STONE, STONE, STONE, STONE],
 ]
 
+import controller
 from player import Player
 player = Player("character.png")
-
-import controller
 
 # Mainloop
 time = pygame.time.get_ticks()
@@ -64,29 +61,33 @@ while 1:
 
     screen.fill((0, 0, 0))
 
+    # Handle controls _before_ drawing
+    pos = player.get_pos()
+
+    if controller.is_down("up"):
+        player.set_pos(pos["x"], pos["y"] - 10 * dtime)
+
+    if controller.is_down("down"):
+        player.set_pos(pos["x"], pos["y"] + 10 * dtime)
+
+    if controller.is_down("left"):
+        player.set_pos(pos["x"] - 10 * dtime, pos["y"])
+
+    if controller.is_down("right"):
+        player.set_pos(pos["x"] + 10 * dtime, pos["y"])
+
+    # Draw the map based on player position
+    pos = player.get_pos()
+    print(pos)
     for row in range(len(tilemap)):
         for column in range(len(tilemap[row])):
             texture = assets.get(tilemap[row][column])
             tilesize = texture.get_rect().size[0]
             screen.blit(pygame.transform.scale(texture, (SCALE * tilesize, SCALE * tilesize)),
-                        (column * SCALE * tilesize, row * SCALE * tilesize))
+                        (column * SCALE * tilesize - pos["x"], row * SCALE * tilesize - pos["y"]))
 
-
-    keys = pygame.key.get_pressed()
-    pos = player.get_pos()
-    
-    if controller.is_down("up"):
-        player.set_pos(pos["x"], pos["y"] - 10)
-
-    if controller.is_down("down"):
-        player.set_pos(pos["x"], pos["y"] + 10)
-
-    if controller.is_down("left"):
-        player.set_pos(pos["x"] - 10, pos["y"])
-
-    if controller.is_down("right"):
-        player.set_pos(pos["x"] + 10, pos["y"])
-
-    screen.blit(pygame.transform.scale(player.sprite.texture, (SCALE * tilesize, SCALE * tilesize)), player.sprite.rect)
+    # Draw player in center of screen
+    size = player.sprite.texture.get_rect().size
+    screen.blit(pygame.transform.scale(player.sprite.texture, (SCALE * tilesize, SCALE * tilesize)), [display.current_w / 2 - (size[0] / 2 * SCALE), display.current_h / 2 - (size[1] / 2 * SCALE)])
 
     pygame.display.flip()

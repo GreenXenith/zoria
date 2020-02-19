@@ -13,7 +13,7 @@ class Player:
         self.x = x
         self.y = y
 
-        self.sprite.set_pos(self.x, self.y)
+        # self.sprite.set_pos(self.x, self.y)
 
     def get_pos(self):
         return {"x": self.x, "y": self.y}

@@ -12,18 +12,17 @@ FPS = 60
 pygame.init()
 pygame.font.init()
 
-# Screen Init (this is hacky .. going to implement a display module later to handle maximizing)
+# Screen Init (might implement a display module later to handle maximizing)
 display = pygame.display.Info()
-winsize = [display.current_w, display.current_h - 20]
+winsize = [800, 600]
 
-os.environ['SDL_VIDEO_WINDOW_POS'] = '%i,%i' % (display.current_w / 2, display.current_h)
-os.environ['SDL_VIDEO_CENTERED'] = '0'
+# os.environ['SDL_VIDEO_WINDOW_POS'] = '%i,%i' % (display.current_w / 2, display.current_h)
+# os.environ['SDL_VIDEO_CENTERED'] = '0'
 
-screen = pygame.display.set_mode(winsize, pygame.RESIZABLE)
+screen = pygame.display.set_mode(winsize) #, pygame.RESIZABLE)
 
-# Textures
+# Textures (non-map only)
 textures = {
-    "floor_cobble.png",
     "character.png"
 }
 
@@ -40,9 +39,10 @@ tilemap = map.map["map"]
 import controller
 from player import Player
 player = Player("character.png")
-player.set_pos(1 * 32 * SCALE, 1 * 32 * SCALE)
+player.sprite.set_rect(player.sprite.texture.get_rect())
+player.set_pos(1, 1)
 
-CENTER = [display.current_w / 2, display.current_h / 2]
+CENTER = [winsize[0] / 2, winsize[1] / 2]
 
 # Mainloop
 clock = pygame.time.Clock()
@@ -52,46 +52,25 @@ while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
 
-    # rect = rect.move(speed[0] * dtime, speed[1] * dtime)
-    # if rect.left < 0 or rect.right > width:
-    #     speed[0] = -speed[0]
-    # if rect.top < 0 or rect.bottom > height:
-    #     speed[1] = -speed[1]
-
     screen.fill((0, 0, 0))
 
-    # Handle controls _before_ drawing
-    pos = player.get_pos()
-
-    if controller.is_down("up"):
-        newy = pos["y"] - player.speed * SCALE * METER * dtime
-        player.set_pos(pos["x"], newy)
-
-    if controller.is_down("down"):
-        newy = pos["y"] + player.speed * SCALE * METER * dtime
-        player.set_pos(pos["x"], newy)
-
-    if controller.is_down("left"):
-        newx = pos["x"] - player.speed * SCALE * METER * dtime
-        player.set_pos(newx, pos["y"])
-
-    if controller.is_down("right"):
-        newx = pos["x"] + player.speed * SCALE * METER * dtime
-        player.set_pos(newx, pos["y"])
+    player.update(dtime, map)
 
     # Move the map based on player position
     pos = player.get_pos()
     psize = player.sprite.texture.get_rect().size
-
     camera = [CENTER[0] - (psize[0] / 2 * SCALE), CENTER[1] - (psize[1] / 2 * SCALE)]
 
     for row in range(len(tilemap)):
         for column in range(len(tilemap[row])):
             texture = assets.get(map.map["tiles"][tilemap[row][column]]["texture"])
             tilesize = texture.get_rect().size[0]
-            screen.blit(pygame.transform.scale(texture, (SCALE * tilesize, SCALE * tilesize)), (column * SCALE * tilesize - pos["x"] + camera[0], row * SCALE * tilesize - pos["y"] + camera[1]))
+            screen.blit(pygame.transform.scale(texture, [SCALE * tilesize, SCALE * tilesize]), [
+                    column * SCALE * tilesize - (pos["x"] * SCALE * METER) + camera[0],
+                    row * SCALE * tilesize - (pos["y"] * SCALE * METER) + camera[1]
+                ])
 
     # Draw player based on camera position
-    screen.blit(pygame.transform.scale(player.sprite.texture, (SCALE * tilesize, SCALE * tilesize)), camera)
+    screen.blit(pygame.transform.scale(player.sprite.texture, [SCALE * tilesize, SCALE * tilesize]), camera)
 
     pygame.display.flip()

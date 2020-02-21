@@ -10,10 +10,11 @@ class Player:
     mp = 50
     xp = 0
 
-    speed = 2 # meters per second
+    # TODO: Fix diagonal speed
+    speed = 1.5 # meters per second
     
-    def __init__(self, texture = "character.png"):
-        self.sprite = Sprite(texture)
+    def __init__(self):
+        self.sprite = Sprite()
 
     def set_pos(self, x, y):
         self.x = x

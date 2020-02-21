@@ -15,7 +15,6 @@ class Map:
 	
     def is_solid(self, x, y):
         try:
-            print(round(x), round(y))
             return self.map["tiles"][self.map["map"][round(x)][round(y)]]["solid"]
         except:
             return False

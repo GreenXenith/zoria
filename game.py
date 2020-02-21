@@ -2,6 +2,7 @@ import pygame
 import os
 import sys
 import assets
+import spritesheet
 
 # Constants
 SCALE = 4
@@ -38,8 +39,11 @@ tilemap = map.map["map"]
 
 import controller
 from player import Player
-player = Player("character.png")
-player.sprite.set_rect(player.sprite.texture.get_rect())
+player = Player()
+player.sprite.texture = spritesheet.SpriteSheet("textures/spritesheet.png", 32)
+player.sprite.set_rect(player.sprite.texture.frame.get_rect())
+# TODO: Use asset loader for spritesheets
+player.sprite.texture.set_animation(0, 3, 0.2)
 player.set_pos(1, 1)
 
 CENTER = [winsize[0] / 2, winsize[1] / 2]
@@ -55,10 +59,11 @@ while 1:
     screen.fill((0, 0, 0))
 
     player.update(dtime, map)
+    spritesheet.update(dtime)
 
     # Move the map based on player position
     pos = player.get_pos()
-    psize = player.sprite.texture.get_rect().size
+    psize = player.sprite.rect.size
     camera = [CENTER[0] - (psize[0] / 2 * SCALE), CENTER[1] - (psize[1] / 2 * SCALE)]
 
     for row in range(len(tilemap)):
@@ -71,6 +76,6 @@ while 1:
                 ])
 
     # Draw player based on camera position
-    screen.blit(pygame.transform.scale(player.sprite.texture, [SCALE * tilesize, SCALE * tilesize]), camera)
+    screen.blit(pygame.transform.scale(player.sprite.texture.frame, [SCALE * tilesize, SCALE * tilesize]), camera)
 
     pygame.display.flip()

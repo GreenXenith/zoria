@@ -8,6 +8,9 @@ class Sprite:
     texture = None
     rect = None
 
+    # def __init__(self, filename):
+    #     self.set_texture(filename)
+
     def set_texture(self, filename):
         self.texture = assets.get(filename)
 
@@ -23,10 +26,3 @@ class Sprite:
 
     def get_pos(self):
         return {"x": self.x, "y": self.y}
-
-    def __init__(self, filename, rect = None):
-        self.set_texture(filename)
-        if rect:
-            self.rect = pygame.Rect(*rect)
-        else:
-            self.rect = pygame.Rect(*self.texture.get_rect())

@@ -1,8 +1,8 @@
 import pygame
-import controller
 import math
-from vector import *
-from sprite import Sprite
+from . import controller
+from .vector import *
+from .sprite import Sprite
 
 class Player:
     pos = Vector(0, 0)

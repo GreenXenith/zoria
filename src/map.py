@@ -1,8 +1,8 @@
-import assets
 import json
 import pygame
 from math import floor
-from vector import Vector
+from . import assets
+from .vector import Vector
 
 class Map:
     map = []

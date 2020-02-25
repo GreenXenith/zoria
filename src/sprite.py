@@ -1,6 +1,5 @@
 import pygame
-import assets
-from vector import *
+from . import assets
 
 class Sprite:
     texture = None

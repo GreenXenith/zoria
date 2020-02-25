@@ -1,8 +1,9 @@
 import pygame
 import os
 import sys
-import assets
-import spritesheet
+from . import assets, controller, spritesheet
+from .map import Map
+from .player import Player
 
 # Constants
 SCALE = 4
@@ -20,18 +21,16 @@ winsize = [800, 600]
 screen = pygame.display.set_mode(winsize) #, pygame.RESIZABLE)
 
 # Load all assets
-for filename in os.listdir(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "textures")):
+for filename in os.listdir(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "assets")):
     assets.load(filename)
 
 # Map
-from map import Map
 map = Map(METER)
 map.load("map.json")
 
-import controller
-from player import Player
+# Player
 player = Player()
-player.sprite.texture = spritesheet.SpriteSheet("textures/character.png", 16, 24)
+player.sprite.texture = spritesheet.SpriteSheet(assets.get("character.png"), 16, 24)
 player.sprite.set_rect((0, 0, 16, 24))
 # TODO: Use asset loader for spritesheets
 player.sprite.texture.set_animation(0, 0, 0)

@@ -18,15 +18,13 @@ class SpriteSheet():
     frame_index = None
     frame = None
 
-    def __init__(self, filename, frameWidth, frameHeight = None):
-        self.file = filename
+    def __init__(self, texture, frameWidth, frameHeight = None):
+        self.file = texture
 
         frameHeight = frameHeight or frameWidth
 
-        img = pygame.image.load(filename)
-
-        width = img.get_width()
-        height = img.get_height()
+        width = texture.get_width()
+        height = texture.get_height()
 
         xframes = math.floor(width / frameWidth)
         yframes = math.floor(height / frameHeight)
@@ -37,7 +35,7 @@ class SpriteSheet():
         y = 0
         for _ in range(total):
             surface = pygame.Surface((frameWidth, frameHeight), pygame.SRCALPHA, 32)
-            surface.blit(img, (0, 0), (frameWidth * x, frameHeight * y, width, height))
+            surface.blit(texture, (0, 0), (frameWidth * x, frameHeight * y, width, height))
             self.frames.append(surface.copy())
 
             x = (x + 1) % xframes

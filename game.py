@@ -14,12 +14,9 @@ pygame.init()
 pygame.font.init()
 
 # Screen Init (might implement a display module later to handle maximizing)
-display = pygame.display.Info()
+pygame.display.set_caption("Zoria")
+pygame.display.set_icon(assets.load("icon.png"))
 winsize = [800, 600]
-
-# os.environ['SDL_VIDEO_WINDOW_POS'] = '%i,%i' % (display.current_w / 2, display.current_h)
-# os.environ['SDL_VIDEO_CENTERED'] = '0'
-
 screen = pygame.display.set_mode(winsize) #, pygame.RESIZABLE)
 
 # Textures (non-map only)

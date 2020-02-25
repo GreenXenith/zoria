@@ -19,12 +19,8 @@ pygame.display.set_icon(assets.load("icon.png"))
 winsize = [800, 600]
 screen = pygame.display.set_mode(winsize) #, pygame.RESIZABLE)
 
-# Textures (non-map only)
-textures = {
-    "character.png"
-}
-
-for filename in textures:
+# Load all assets
+for filename in os.listdir(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "textures")):
     assets.load(filename)
 
 # Map

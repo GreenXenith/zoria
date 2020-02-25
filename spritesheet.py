@@ -44,8 +44,11 @@ class SpriteSheet():
             if x % xframes == 0:
                 y += 1
 
-        self.width = xframes
-        self.height = yframes
+        self.width = frameWidth
+        self.height = frameHeight
+
+        self.xframes = xframes
+        self.yframes = yframes
         self.frame_total = total
 
         self.frame_index = 0
@@ -58,15 +61,19 @@ class SpriteSheet():
         spritesheets.append(self)
 
     def minmax(self, frame):
-        return min(max(0, frame), self.width * self.height - 1)
+        return min(max(0, frame), self.xframes * self.yframes - 1)
 
     def set_animation(self, start, end, speed):
+        if self.start == start and self.end == end:
+            return
         self.start = self.minmax(start)
         self.end = self.minmax(end)
         self.speed = max(0, speed)
 
         self.frame_index = self.start
         self.frame = self.frames[self.frame_index]
+
+        self.clock = 0
 
     def update(self, dtime):
         self.clock += dtime

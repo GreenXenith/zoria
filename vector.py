@@ -5,9 +5,9 @@ def vec_or_num(x, y = None):
     return x
 
 class Vector:
-    def __init__(self, x = 0, y = 0):
+    def __init__(self, x = 0, y = None):
         self.x = float(x)
-        self.y = float(y)
+        self.y = float(y or x)
 
     def __repr__(self):
         return "Vector {{x: {0}, y: {1}}}".format(self.x, self.y)

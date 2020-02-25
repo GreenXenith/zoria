@@ -1,5 +1,6 @@
 import pygame
 import controller
+import math
 from vector import *
 from sprite import Sprite
 
@@ -23,27 +24,26 @@ class Player:
         self.pos = vec_or_num(vec_or_x, y)
 
     def update(self, dtime, map):
-        vx = 0
-        vy = 0
+        self.vel = Vector(0, 0)
 
         if controller.is_down("left"):
             self.dir = 3
-            vx -= 1
+            self.vel.x -= 1
 
         if controller.is_down("right"):
             self.dir = 1
-            vx += 1
+            self.vel.x += 1
 
         if controller.is_down("up"):
             self.dir = 2
-            vy -= 1
+            self.vel.y -= 1
 
         if controller.is_down("down"):
             self.dir = 0
-            vy += 1
+            self.vel.y += 1
 
-        self.vel.x = vx
-        self.vel.y = vy
+        if self.vel.x != 0 and self.vel.y != 0:
+            self.vel = self.vel * math.sqrt(0.5)
 
         oldx = self.pos.x
         self.set_pos(self.pos.x + self.vel.x * self.speed * dtime, self.pos.y)

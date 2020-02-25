@@ -28,8 +28,6 @@ from map import Map
 map = Map(METER)
 map.load("map.json")
 
-tilemap = map.map["map"]
-
 import controller
 from player import Player
 player = Player()
@@ -58,14 +56,17 @@ while 1:
     psize = player.sprite.rect.size
     camera = [CENTER[0] - (psize[0] / 2 * SCALE), CENTER[1] - (psize[1] / 2 * SCALE)]
 
-    for row in range(len(tilemap)):
-        for column in range(len(tilemap[row])):
-            texture = assets.get(map.map["tiles"][tilemap[row][column]]["texture"])
-            tilesize = texture.get_rect().size[0]
-            screen.blit(pygame.transform.scale(texture, [SCALE * tilesize, SCALE * tilesize]), [
-                    column * SCALE * tilesize - (player.pos.x * SCALE * METER) + camera[0],
-                    row * SCALE * tilesize - (player.pos.y * SCALE * METER) + camera[1]
-                ])
+    for layer in map.map["renderLayers"]:
+        for row in range(len(layer)):
+            for column in range(len(layer[row])):
+                materialIndex = layer[row][column]
+                if materialIndex != 0:
+                    texture = assets.get(map.map["tiles"][materialIndex - 1])
+                    tilesize = texture.get_rect().size[0]
+                    screen.blit(pygame.transform.scale(texture, [SCALE * tilesize, SCALE * tilesize]), [
+                            column * SCALE * tilesize - (player.pos.x * SCALE * METER) + camera[0],
+                            row * SCALE * tilesize - (player.pos.y * SCALE * METER) + camera[1]
+                        ])
 
     # Draw player based on camera position
     screen.blit(pygame.transform.scale(player.sprite.texture.frame, [SCALE * player.sprite.texture.width, SCALE * player.sprite.texture.height]), camera)

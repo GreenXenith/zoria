@@ -12,21 +12,15 @@ class Map:
 
     def load(self, filename):
         with open(filename) as file:
-            data = json.load(file)
-            for tile in data["tiles"]:
-                assets.load(tile["texture"])
-
-            self.map = data
+            self.map = json.load(file)
 
     def collides(self, pos, rect):
         for y in range(int(floor(pos.y)) - 1, int(floor(pos.y)) + 2):
             for x in range(int(floor(pos.x)) - 1, int(floor(pos.x)) + 2):
                 if not (x == pos.x and y == pos.y):
-                    tile = self.map["tiles"][self.map["map"][y][x]]
-                    if tile["solid"]:
-                        rect2 = assets.get(tile["texture"]).get_rect()
-                        if pos.x + (rect.width / self.METER) >= x and pos.x <= (x + rect2.width / self.METER) and \
-                                pos.y + (rect.height / self.METER) >= y and pos.y <= (y + rect2.height / self.METER):
+                    if self.map["boundaries"][y][x] == 1:
+                        if pos.x + (rect.width / self.METER) >= x and pos.x <= (x + 1) and \
+                                pos.y + (rect.height / self.METER) >= y and pos.y <= (y + 1):
                             return True
 
         return False

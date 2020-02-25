@@ -61,6 +61,6 @@ class Player:
 
         if controller.is_down("up") or controller.is_down("down") or \
                 controller.is_down("left") or controller.is_down("right"):
-            self.sprite.texture.set_animation(self.dir * 4, (self.dir * 4) + 3, 0.2)
+            self.sprite.texture.set_animation(self.dir * 4, (self.dir * 4) + 3, 0.1)
         else:
             self.sprite.texture.set_animation(self.dir * 4, self.dir * 4, 0)

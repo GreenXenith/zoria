@@ -7,6 +7,9 @@ from vector import Vector
 class Map:
     map = []
 
+    def __init__(self, meter):
+        self.METER = meter # Pixels per 1 meter
+
     def load(self, filename):
         with open(filename) as file:
             data = json.load(file)
@@ -22,8 +25,8 @@ class Map:
                     tile = self.map["tiles"][self.map["map"][y][x]]
                     if tile["solid"]:
                         rect2 = assets.get(tile["texture"]).get_rect()
-                        if pos.x + (rect.width / 32) >= x and pos.x <= (x + rect2.width / 32) and \
-                                pos.y + (rect.height / 32) >= y and pos.y <= (y + rect2.height / 32):
+                        if pos.x + (rect.width / self.METER) >= x and pos.x <= (x + rect2.width / self.METER) and \
+                                pos.y + (rect.height / self.METER) >= y and pos.y <= (y + rect2.height / self.METER):
                             return True
 
         return False

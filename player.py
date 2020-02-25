@@ -3,8 +3,6 @@ import controller
 from vector import *
 from sprite import Sprite
 
-METER = 32
-
 class Player:
     pos = Vector(0, 0)
 

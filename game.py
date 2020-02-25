@@ -29,7 +29,7 @@ for filename in textures:
 
 # Map
 from map import Map
-map = Map()
+map = Map(METER)
 map.load("map.json")
 
 tilemap = map.map["map"]

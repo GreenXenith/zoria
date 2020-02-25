@@ -1,6 +1,5 @@
 import pygame
-import os
-import sys
+import os, sys
 from . import assets, controller, spritesheet
 from .map import Map
 from .player import Player

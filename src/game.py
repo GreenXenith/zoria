@@ -25,7 +25,8 @@ for filename in os.listdir(os.path.join(os.path.dirname(os.path.realpath(sys.arg
 
 # Map
 map = Map(METER)
-map.load("map.json")
+# map.load("map.json")
+map.generate()
 
 # Player
 player = Player()

@@ -1,6 +1,6 @@
 import pygame
 import json, math
-from . import assets
+from . import assets, generator
 from .vector import Vector
 
 class Map:
@@ -12,6 +12,9 @@ class Map:
     def load(self, filename):
         with open(filename) as file:
             self.map = json.load(file)
+    
+    def generate(self):
+        self.map = generator.new()
 
     def collides(self, pos, rect):
         for y in range(int(math.floor(pos.y)) - 1, int(math.floor(pos.y)) + 2):

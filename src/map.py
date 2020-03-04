@@ -1,6 +1,7 @@
 import pygame
 import json, math
-from . import assets, generator
+from . import assets
+from .generator import Generator
 from .vector import Vector
 
 class Map:
@@ -14,7 +15,8 @@ class Map:
             self.map = json.load(file)
     
     def generate(self):
-        self.map = generator.new()
+        self.generator = Generator(80)
+        self.map = self.generator.get_map()
 
     def collides(self, pos, rect):
         for y in range(int(math.floor(pos.y)) - 1, int(math.floor(pos.y)) + 2):

@@ -54,7 +54,7 @@ class SpriteSheet():
 
         self.start = 0
         self.end = total - 1
-        self.speed = 0.05
+        self.speed = 2
 
         spritesheets.append(self)
 
@@ -75,8 +75,8 @@ class SpriteSheet():
 
     def update(self, dtime):
         self.clock += dtime
-        if self.clock >= self.speed:
-            self.clock = self.clock - self.speed
+        if self.speed > 0 and self.clock >= 1 / self.speed:
+            self.clock = self.clock - 1 / self.speed
 
             self.frame_index = max(self.start, (self.frame_index + 1) % (self.end + 1))
             self.frame = self.frames[self.frame_index]

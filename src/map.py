@@ -22,7 +22,7 @@ class Map:
         for y in range(int(math.floor(pos.y)) - 1, int(math.floor(pos.y)) + 2):
             for x in range(int(math.floor(pos.x)) - 1, int(math.floor(pos.x)) + 2):
                 if not (x == pos.x and y == pos.y):
-                    if self.map["boundaries"][y][x] == 1:
+                    if self.map["boundaries"][y][x] > 0:
                         if pos.x + (rect.width / self.METER) >= x and pos.x <= (x + 1) and \
                                 pos.y + (rect.height / self.METER) >= y and pos.y <= (y + 1):
                             return True

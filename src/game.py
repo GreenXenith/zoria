@@ -5,7 +5,7 @@ from .map import Map
 from .player import Player
 
 # Constants
-SCALE = 1
+SCALE = 3
 METER = 32
 FPS = 60
 
@@ -35,8 +35,7 @@ player.sprite.set_rect((0, 0, 16, 24))
 # TODO: Use asset loader for spritesheets
 player.sprite.texture.set_animation(0, 0, 0)
 player.set_pos(1.1, 1.1)
-
-player.set_pos(map.generator.rooms[0].x, map.generator.rooms[0].y)
+player.set_pos(map.generator.rooms[0].x + 2, map.generator.rooms[0].y + 2)
 
 CENTER = [winsize[0] / 2, winsize[1] / 2]
 

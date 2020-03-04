@@ -15,7 +15,7 @@ class Player:
     vel = Vector(0, 0)
 
     # TODO: Fix diagonal speed
-    speed = 15 # meters per second
+    speed = 3 # meters per second
 
     def __init__(self):
         self.sprite = Sprite()

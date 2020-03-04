@@ -111,6 +111,7 @@ class Generator():
                 self.board[row][col] = 1
     
     def get_map(self):
+        # Map object
         map = {
             "tiles": [
                 "floor_cobble.png",
@@ -130,14 +131,35 @@ class Generator():
             "renderLayers": []
         }
 
+        # Generate walls
+        bounds = []
+        for y in range(self.height):
+            bounds.append([])
+            for x in range(self.width):
+                wall = 0
+                if self.board[y][x] > 0:
+                    for x2 in range(x - 1, x + 2):
+                        for y2 in range(y - 1, y + 2):
+                            if self.board[y2][x2] == 0:
+                                wall += 1
+                bounds[y].append(wall)
+        map["boundaries"] = bounds
+
+        # Floor layer
         layer1 = self.board.copy()     
         map["renderLayers"].append(layer1)
 
-        layer2 = self.board.copy()
+        # Wall layer
+        layer2 = []
+        for y in range(self.height):
+            layer2.append([])
+            for _ in range(self.width):
+                layer2[y].append(0)
+
         for y in range(1, self.height - 1):
             for x in range(1, self.width - 1):
                 if self.board[y][x] == 1:
-                    tile = 1
+                    tile = 0
                     if self.board[y][x - 1] == 1 and self.board[y][x + 1] == 1:
                         if self.board[y - 1][x] == 0:
                             tile = 2
@@ -152,90 +174,33 @@ class Generator():
 
                     layer2[y][x] = tile
 
-        # for y in range(1, len(layer2) - 1):
-        #     for x in range(1, len(layer2[y]) - 1):
-        #         if layer2[y][x] == 0:
-        #             tile = 0
-        #             if layer2[y - 1][x] != 0 and layer2[y][x - 1] == 0:
-        #                 tile = 8
-        #             elif layer2[y - 1][x] != 0 and layer2[y][x + 1] != 0:
-        #                 tile = 9
-        #             elif layer2[y + 1][x] != 0 and layer2[y][x - 1] != 0:
-        #                 tile = 7
-        #             elif layer2[y + 1][x] != 0 and layer2[y][x + 1] != 0:
-        #                 tile = 6
+        for y in range(1, self.height - 1):
+            for x in range(1, self.width - 1):
+                if bounds[y][x] > 0 and layer2[y][x] == 0:
+                    tile = 0
+                    if bounds[y + 1][x] > 0 and bounds[y][x + 1] > 0:
+                        if bounds[y][x] > 1:
+                            tile = 6
+                        else:
+                            tile = 10
+                    elif bounds[y + 1][x] > 0 and bounds[y][x - 1] > 0:
+                        if bounds[y][x] > 1:
+                            tile = 7
+                        else:
+                            tile = 11
+                    elif bounds[y - 1][x] > 0 and bounds[y][x - 1] > 0:
+                        if bounds[y][x] > 1:
+                            tile = 8
+                        else:
+                            tile = 12
+                    elif bounds[y - 1][x] > 0 and bounds[y][x + 1] > 0:
+                        if bounds[y][x] > 1:
+                            tile = 9
+                        else:
+                            tile = 13
 
-        #             layer2[y][x] = tile
+                    layer2[y][x] = tile
 
         map["renderLayers"].append(layer2)
 
-        bounds = []
-        for y in range(self.height):
-            bounds.append([])
-            for _ in range(self.width):
-                bounds[y].append(0)
-        map["boundaries"] = bounds
-
         return map
-
-# Drawing
-if __name__ == "__main__":
-    gen = Generator(80)
-
-    draw = []
-    for y in range(gen.height):
-        draw.append([])
-        for _ in range(gen.width):
-            draw[y].append(' ')
-    
-    for y in range(len(gen.board)):
-        for x in range(len(gen.board[y])):
-            if gen.board[y][x] == 1:
-                char = '.'
-                if gen.board[y - 1][x] == 0 or gen.board[y + 1][x] == 0:
-                    if gen.board[y][x - 1] == 1 and gen.board[y][x + 1] == 1:
-                        char = '═'
-                elif gen.board[y][x - 1] == 0 or gen.board[y][x + 1] == 0:
-                    if gen.board[y - 1][x] == 1 and gen.board[y + 1][x] == 1:
-                        char = '║'
-
-                draw[y][x] = char
-
-    for y in range(len(draw)):
-        for x in range(len(draw[y])):
-            if draw[y][x] == '.':
-                char = '.'
-                if draw[y - 1][x] == '║' and draw[y][x - 1] == '═':
-                    char = '╝'
-                elif draw[y - 1][x] == '║' and draw[y][x + 1] == '═':
-                    char = '╚'
-                elif draw[y + 1][x] == '║' and draw[y][x - 1] == '═':
-                    char = '╗'
-                elif draw[y + 1][x] == '║' and draw[y][x + 1] == '═':
-                    char = '╔'
-
-                draw[y][x] = char
-
-    # for room in rooms:
-    #     for w in range(room.width):
-    #         map[room.y][room.x + w] = "═"
-    #         map[room.y + room.height - 1][room.x + w] = "═"
-
-    #     for h in range(room.height):
-    #         map[room.y + h][room.x] = "║"
-    #         map[room.y + h][room.x + room.width - 1] = "║"
-        
-    #     for h in range(room.height - 2):
-    #         for w in range(room.width - 2):
-    #             map[room.y + h + 1][room.x + w + 1] = " "
-        
-    #     map[room.y][room.x] = "╔"
-    #     map[room.y][room.x + room.width - 1] = "╗"
-    #     map[room.y + room.height - 1][room.x] = "╚"
-    #     map[room.y + room.height - 1][room.x + room.width - 1] = "╝"
-    
-    # for y in map:
-    #     print(''.join(y))
-
-    for y in draw:
-        print(''.join(str(i) for i in y))

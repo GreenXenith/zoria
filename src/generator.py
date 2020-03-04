@@ -43,9 +43,9 @@ class Generator():
         self.place_corridors()
 
     def place_rooms(self):
-        for _ in range(rand(4, 15)):
-            width = rand(6, 16)
-            height = rand(6, 16)
+        for _ in range(rand(10, 30)):
+            width = rand(4, 10)
+            height = rand(4, 10)
             x = rand(0, 60)
             y = rand(0, 60)
             

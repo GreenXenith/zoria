@@ -156,44 +156,46 @@ class Generator():
             for _ in range(self.width):
                 layer2[y].append(0)
 
-        for y in range(1, self.height - 1):
-            for x in range(1, self.width - 1):
+        # Straight walls
+        for y in range(self.height):
+            for x in range(self.width):
                 if self.board[y][x] == 1:
                     tile = 0
-                    if self.board[y][x - 1] == 1 and self.board[y][x + 1] == 1:
-                        if self.board[y - 1][x] == 0:
+                    if x > 0 and x < self.width and self.board[y][x - 1] == 1 and self.board[y][x + 1] == 1:
+                        if y == 0 or self.board[y - 1][x] == 0:
                             tile = 2
-                        elif self.board[y + 1][x] == 0:
+                        elif y == self.height or self.board[y + 1][x] == 0:
                             tile = 4
 
-                    if self.board[y - 1][x] == 1 and self.board[y + 1][x] == 1:
-                        if self.board[y][x - 1] == 0:
+                    if y > 0 and y < self.height and self.board[y - 1][x] == 1 and self.board[y + 1][x] == 1:
+                        if x == 0 or self.board[y][x - 1] == 0:
                             tile = 3
-                        elif self.board[y][x + 1] == 0:
+                        elif x == self.width or self.board[y][x + 1] == 0:
                             tile = 5
 
                     layer2[y][x] = tile
 
-        for y in range(1, self.height - 1):
-            for x in range(1, self.width - 1):
+        # Corner walls (Im not sure how some of it works but whatever)
+        for y in range(self.height):
+            for x in range(self.width):
                 if bounds[y][x] > 0 and layer2[y][x] == 0:
                     tile = 0
-                    if bounds[y + 1][x] > 0 and bounds[y][x + 1] > 0:
+                    if (y > self.height or bounds[y + 1][x] > 0) and (x > self.width or bounds[y][x + 1] > 0):
                         if bounds[y][x] > 1:
                             tile = 6
                         else:
                             tile = 10
-                    elif bounds[y + 1][x] > 0 and bounds[y][x - 1] > 0:
+                    elif (y > self.height or bounds[y + 1][x] > 0) and (x < 1 or bounds[y][x - 1] > 0):
                         if bounds[y][x] > 1:
                             tile = 7
                         else:
                             tile = 11
-                    elif bounds[y - 1][x] > 0 and bounds[y][x - 1] > 0:
+                    elif (y < 1 or bounds[y - 1][x] > 0) and (bounds[y][x - 1] > 0):
                         if bounds[y][x] > 1:
                             tile = 8
                         else:
                             tile = 12
-                    elif bounds[y - 1][x] > 0 and bounds[y][x + 1] > 0:
+                    elif (y < 1 or bounds[y - 1][x] > 0) and (x >= self.width or bounds[y][x + 1] > 0):
                         if bounds[y][x] > 1:
                             tile = 9
                         else:

@@ -1,3 +1,5 @@
+from math import floor, ceil
+
 def vec_or_num(x, y = None):
     if (type(x) is int or type(x) is float) == True:
         return Vector(x, y or x)
@@ -30,3 +32,12 @@ class Vector:
     def __div__(self, b):
         vec = vec_or_num(b)
         return Vector(self.x / vec.x, self.y / vec.y)
+
+    def __round__(self):
+        return Vector(round(self.x), round(self.y))
+
+    def __floor__(self):
+        return Vector(floor(self.x), floor(self.y))
+
+    def __ceil__(self):
+        return Vector(ceil(self.x), ceil(self.y))

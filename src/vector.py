@@ -14,8 +14,13 @@ class Vector:
     def __repr__(self):
         return "Vector {{x: {0}, y: {1}}}".format(self.x, self.y)
 
-    def apply(self, func):
-        return Vector(func(self.x), func(self.y))
+    def __eq__(self, b):
+        vec = vec_or_num(b)
+        return self.x == vec.x and self.y == vec.y
+    
+    def __ne__(self, b):
+        vec = vec_or_num(b)
+        return self.x != vec.x or self.y != vec.y
 
     def __add__(self, b):
         vec = vec_or_num(b)
@@ -41,3 +46,6 @@ class Vector:
 
     def __ceil__(self):
         return Vector(ceil(self.x), ceil(self.y))
+
+    def apply(self, func):
+        return Vector(func(self.x), func(self.y))

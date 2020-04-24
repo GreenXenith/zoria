@@ -32,7 +32,7 @@ map.generate()
 # Player
 player = Player()
 player.sprite.texture = spritesheet.SpriteSheet(assets.get("character.png"), 16, 24)
-player.sprite.set_rect((0, 16, 16, 24))
+player.sprite.set_rect((0, 8, 16, 24))
 # TODO: Scale character up x2 (1.5m)
 # TODO: Use asset loader for spritesheets
 player.sprite.texture.set_animation(0, 0, 0)
@@ -41,7 +41,6 @@ player.set_pos(map.generator.rooms[0].x + 2, map.generator.rooms[0].y + 2)
 
 CENTER = [winsize[0] / 2, winsize[1] / 2]
 BGCOLOR = pygame.Color("#3e1202")
-
 
 arial = pygame.font.SysFont("Arial", 10)
 

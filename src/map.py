@@ -20,7 +20,6 @@ class Map:
         # self.placer = loot.Placer()
         # self.map = self.placer.populate(self.map)
 
-    # TODO: Dont use rect h/w, use corners x/y
     def collides(self, pos, rect):
         px = int(math.floor(pos.x))
         py = int(math.floor(pos.y))
@@ -29,8 +28,8 @@ class Map:
                 if y >= 0 and y < len(self.map[1]) and x >=0 and x < len(self.map[1][y]):
                     tile = self.map[1][y][x]
                     if tile and tile.is_solid():
-                        if pos.x + (rect.width / self.METER) >= x and pos.x <= (x + 1) and \
-                                pos.y + (rect.height / self.METER) >= y and pos.y <= (y + 1):
+                        if pos.x + (rect[2] / self.METER) >= x and pos.x + (rect[0] / self.METER) <= (x + 1) and \
+                                pos.y + (rect[3] / self.METER) >= y and pos.y + (rect[1] / self.METER) <= (y + 1):
                             return True
         return False
 

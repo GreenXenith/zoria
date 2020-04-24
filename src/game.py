@@ -67,17 +67,13 @@ while 1:
     psize = player.sprite.rect.size
     camera = [CENTER[0] - (psize[0] / 2 * SCALE), CENTER[1] - (psize[1] / 2 * SCALE)]
 
-    player_rendered = False
-
     for z in range(len(map.map)):
         for y in range(len(map.map[z])):
-            if not player_rendered and z == 1 and y == round(player.pos.y):
-                # TODO: Move this to x-loop to reduce code. (Check against rounded player.pos.x)
-                # Draw player based on camera position
-                screen.blit(pygame.transform.scale(player.sprite.texture.frame, [round(SCALE * player.sprite.texture.width), round(SCALE * player.sprite.texture.height)]), camera)
-                player_rendered = True
-
             for x in range(len(map.map[z][y])):
+                if z == 1 and y == round(player.pos.y) and x == round(player.pos.x):
+                    # Draw player
+                    screen.blit(pygame.transform.scale(player.sprite.texture.frame, [round(SCALE * player.sprite.texture.width), round(SCALE * player.sprite.texture.height)]), camera)
+
                 tile = map.get_tile(x, y, z)
                 if tile:
                     # NOTE: Rotations are clockwise due to Y+ down rendering

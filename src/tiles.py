@@ -24,7 +24,7 @@ def get_tile_from_content_id(id):
         return None
 
 class Tile:
-    texture = "none.png"
+    textures = ["none.png"]
     solid = True
     rotation = 0
 
@@ -42,7 +42,7 @@ class Tile:
     def set_rotation(self, rot):
         self.rotation = rot
     
-    def get_rotation(self, rot):
+    def get_rotation(self):
         return self.rotation
 
     def is_solid(self):

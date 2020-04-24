@@ -20,6 +20,7 @@ class Map:
         # self.placer = loot.Placer()
         # self.map = self.placer.populate(self.map)
 
+    # TODO: Dont use rect h/w, use corners x/y
     def collides(self, pos, rect):
         px = int(math.floor(pos.x))
         py = int(math.floor(pos.y))

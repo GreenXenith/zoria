@@ -123,7 +123,7 @@ class Generator():
                     map.set_tile(x, y, 0, "map:cobble")
 
                     if self.board[y][x] == 1:
-                        # Adjacent sides (Corresponds with rotation map below)
+                        # Adjacent void (Corresponds with rotation map below)
                         asides = [
                             [1, 0],
                             [0, 1],
@@ -139,7 +139,7 @@ class Generator():
                                 adj += 1
                                 arot = key
 
-                        # Diagonal sides (Corresponds with rotation map below)
+                        # Diagonal void (Corresponds with rotation map below)
                         dsides = [
                             [-1, 1],
                             [-1, -1],
@@ -148,25 +148,29 @@ class Generator():
                         ]
 
                         dia = 0 # How many diagonal
-                        drot = 0 # Last diagonal key
+                        drot = None # Last diagonal key
                         for key in range(len(dsides)):
                             off = dsides[key]
                             if self.board[y + off[1]][x + off[0]] == 0:
                                 dia += 1
                                 # Only set key if opposite tile is floor
                                 if self.board[y - off[1]][x - off[0]] == 1:
-                                    drot = key
+                                    if drot == None:
+                                        drot = key
+                                    else:
+                                        if self.board[y][x + off[0]] == 0 and self.board[y + off[1]][x] == 0:
+                                            drot = key
 
                         tile = ""
                         rmap = [2, 3, 0, 1] # Rotation map
                         if adj == 0 and dia == 1: # Need diagonals to prevent false positives with all-floor
-                            tile = "map:wall_cobble_corner_outer"
+                            tile = "map:wall_corner_outer"
                             rot = rmap[drot]
                         elif adj == 1:
-                            tile = "map:wall_cobble"
+                            tile = "map:wall"
                             rot = rmap[arot]
                         elif adj == 2:
-                            tile = "map:wall_cobble_corner_inner"
+                            tile = "map:wall_corner_inner"
                             rot = rmap[drot]
 
                         if tile != "":

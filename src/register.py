@@ -1,25 +1,40 @@
 from . import tiles
 
 tiles.register_tile("map:cobble", {
-    "texture": "floor_cobble.png",
+    "textures": ["floor.png"],
 })
 
-tiles.register_tile("map:wall_cobble", {
-    "texture": "wall_cobble.png",
+tiles.register_tile("map:wall", {
+    "textures": [
+        "wall_0.png",
+        "wall_1.png",
+        "wall_2.png",
+        "wall_3.png",
+    ],
 })
 
-tiles.register_tile("map:wall_cobble_corner_inner", {
-    "texture": "wall_cobble_corner_inner.png",
+tiles.register_tile("map:wall_corner_inner", {
+    "textures": [
+        "wall_corner_inner_0.png",
+        "wall_corner_inner_1.png",
+        "wall_corner_inner_2.png",
+        "wall_corner_inner_3.png",
+    ],
 })
 
-tiles.register_tile("map:wall_cobble_corner_outer", {
-    "texture": "wall_cobble_corner_outer.png",
+tiles.register_tile("map:wall_corner_outer", {
+    "textures": [
+        "wall_corner_outer_0.png",
+        "wall_corner_outer_1.png",
+        "wall_corner_outer_2.png",
+        "wall_corner_outer_3.png",
+    ],
 })
 
 tiles.register_tile("loot:coins", {
-    "texture": "loot_gold.png",
+    "textures": ["loot_gold.png"],
 })
 
 tiles.register_tile("loot:pile", {
-    "texture": "loot_pile.png",
+    "textures": ["loot_pile.png"],
 })

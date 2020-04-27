@@ -21,15 +21,19 @@ class Map:
         # self.map = self.placer.populate(self.map)
 
     def collides(self, pos, rect):
-        px = int(math.floor(pos.x))
-        py = int(math.floor(pos.y))
-        for y in range(py - 1, py + 2):
+        METER = self.METER
+        cx = pos.x + (rect[0] / METER)
+        cy = pos.y + (rect[1] / METER)
+        px = int(math.floor(cx))
+        py = int(math.floor(cy))
+        cw = cx + (rect[2] / METER)
+        ch = cy + (rect[3] / METER)
+        for y in range(py - 1, py + 1 + math.ceil(rect[3] / METER)):
             for x in range(px - 1, px + 2):
-                if y >= 0 and y < len(self.map[1]) and x >=0 and x < len(self.map[1][y]):
+                if y >= 0 and y < len(self.map[1]) and x >= 0 and x < len(self.map[1][y]):
                     tile = self.map[1][y][x]
                     if tile and tile.is_solid():
-                        if pos.x + (rect[2] / self.METER) >= x and pos.x + (rect[0] / self.METER) <= (x + 1) and \
-                                pos.y + (rect[3] / self.METER) >= y and pos.y + (rect[1] / self.METER) <= (y + 1):
+                        if cw >= x and cx <= (x + 1) and ch >= y and cy <= (y + 1):
                             return True
         return False
 

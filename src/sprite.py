@@ -13,3 +13,6 @@ class Sprite:
 
     def set_rect(self, rect):
         self.rect = pygame.Rect(*rect)
+    
+    def get_rect(self):
+        return self.rect

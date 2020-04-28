@@ -160,6 +160,9 @@ class Generator():
                                         if self.board[y][x + off[0]] == 0 and self.board[y + off[1]][x] == 0:
                                             drot = key
 
+                        if drot == None:
+                            drot = 0
+
                         tile = ""
                         rmap = [2, 3, 0, 1] # Rotation map
                         if adj == 0 and dia == 1: # Need diagonals to prevent false positives with all-floor

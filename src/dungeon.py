@@ -33,7 +33,7 @@ class Room():
     def intersects(self, other):
         return self.left <= other.right and self.right >= other.left and self.top <= other.bottom and self.bottom >= other.top
 
-# Generator class in case its used multiple times
+# Generator as class in case its used multiple times
 class Generator():
     rooms = [] # Stores room objects
     board = [] # Map of zeros and ones
@@ -52,19 +52,19 @@ class Generator():
 
     def place_rooms(self):
         for _ in range(rand(10, 30)): # Amount of rooms
-            width = rand(4, 10) # Room size
-            height = rand(4, 10)
-            x = rand(0, self.width - width) # Room position
-            y = rand(0, self.height - height)
+            rwidth = rand(6, 12) # Room size
+            rheight = rand(6, 12)
+            x = rand(0, self.width - rwidth) # Room position
+            y = rand(0, self.height - rheight)
 
-            if x + width > self.width:
-                x = self.width - width
+            if x + rwidth > self.width:
+                x = self.width - rwidth
 
-            if y + height > self.height:
-                y = self.height - height
+            if y + rheight > self.height:
+                y = self.height - rheight
 
             collides = False
-            room = Room(x, y, width, height)
+            room = Room(x, y, rwidth, rheight)
 
             # Make sure room doesn't collide
             for other_room in self.rooms:
@@ -106,21 +106,20 @@ class Generator():
                     self.horiz_corridor(room2.cx, room1.cx, room1.cy)
 
     def horiz_corridor(self, x1, x2, y):
-        for row in range(y - 1, y + 2):
+        for row in range(y - 1, y + 3):
             for col in range(x1 - 1, x2 + 2):
                 self.board[row][col] = 1
 
     def vert_corridor(self, y1, y2, x):
         for row in range(y1, y2 + 2):
-            for col in range(x - 1, x + 2):
+            for col in range(x - 1, x + 3):
                 self.board[row][col] = 1
 
     def generate(self, map):
         for y in range(self.height):
             for x in range(self.width):
                 if self.board[y][x] == 1:
-                    # Floor
-                    map.set_tile(x, y, 0, "map:cobble")
+                    map.set_tile(x, y, 0, "map:floor")
 
                     if self.board[y][x] == 1:
                         # Adjacent void (Corresponds with rotation map below)

@@ -93,13 +93,14 @@ while 1:
                     # Only render tile if on-screen
                     if pos[0] + scaledsize[0] >= 0 and pos[0] <= winsize[0] and \
                             pos[1] + scaledsize[1] >= 0 and pos[1] <= winsize[1]:
+                        tile.on_step(dtime, map, player)
                         screen.blit(pygame.transform.scale(texture, [math.floor(scaledsize[0]), math.ceil(scaledsize[1])]), pos)
 
                 # DEBUG
                 # text = arial.render(str(int(x)) + ", " + str(int(y)), False, (255, 255, 255))
                 # screen.blit(text, [x * 64 - (player.pos.x * round(SCALE * METER)) + camera[0], y * 64 - (player.pos.y * round(SCALE * METER)) + camera[1]])
 
-                if not player_rendered and z == 1 and y == round(player.pos.y + player.sprite.get_rect()[3] / METER):
+                if not player_rendered and z == 1 and y == math.ceil(player.pos.y + 1 + player.sprite.get_rect()[3] / METER):
                     # Draw player
                     screen.blit(pygame.transform.scale(player.sprite.texture.frame, [round(SCALE * player.sprite.texture.width), round(SCALE * player.sprite.texture.height)]), camera)
                     player_rendered = True

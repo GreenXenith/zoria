@@ -1,6 +1,6 @@
 import pygame
 import json, math
-from . import assets, dungeon, loot
+from . import assets, dungeon, loot, tiles
 from .tiles import Tile
 from .vector import Vector
 
@@ -17,10 +17,11 @@ class Map:
     def generate(self):
         self.generator = dungeon.Generator(80)
         self.generator.generate(self)
-        # self.placer = loot.Placer()
-        # self.map = self.placer.populate(self.map)
+        self.placer = loot.Placer()
+        self.placer.populate(self)
 
     def collides(self, pos, rect):
+        # Player position handling really needs to be reworked ...
         METER = self.METER
         cx = pos.x + (rect[0] / METER)
         cy = pos.y + (rect[1] / METER)
@@ -47,8 +48,10 @@ class Map:
         for _ in range(len(self.map[z][y]), x + 1):
             self.map[z][y].append(None)
 
-        if name != "":
-            self.map[z][y][x] = Tile(name)
+        if not name:
+            self.map[z][y][x] = None
+        elif tiles.registered_tiles[name]:
+            self.map[z][y][x] = Tile(name, (x, y, z))
 
     def get_tile(self, x, y, z):
         try:

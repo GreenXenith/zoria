@@ -28,10 +28,13 @@ class Tile:
     solid = True
     rotation = 0
 
-    def __init__(self, name):
+    def __init__(self, name, pos):
         self.name = name
+        self.pos = pos
         for key in registered_tiles[name]:
-            self.__dict__[key] = registered_tiles[name][key]
+            value = registered_tiles[name][key]
+            if not callable(value):
+                setattr(self, key, value)
 
     def get(self, key):
         try:
@@ -41,9 +44,13 @@ class Tile:
 
     def set_rotation(self, rot):
         self.rotation = rot
-    
+
     def get_rotation(self):
         return self.rotation
 
     def is_solid(self):
         return self.get("solid") == True
+    
+    def on_step(self, dtime, map, player):
+        if "on_step" in registered_tiles[self.name]:
+            registered_tiles[self.name]["on_step"](self, dtime, map, player)

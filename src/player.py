@@ -2,14 +2,14 @@ import pygame
 import math
 from . import controller
 from .vector import *
+from .hud import Hud
 from .sprite import Sprite
 
 class Player:
     pos = Vector(0, 0)
 
     hp = 100
-    mp = 50
-    xp = 0
+    coins = 0
 
     dir = 0
     vel = Vector(0, 0)
@@ -19,6 +19,17 @@ class Player:
 
     def __init__(self):
         self.sprite = Sprite()
+        self.hud = Hud()
+        self.hud.add("coin", [0, 0.9], {
+            "type": "image",
+            "texture": "coin.png",
+            "scale": 2
+        })
+        self.hud.add("coincount", [0.08, 0.92], {
+            "type": "text",
+            "text": 0,
+            "size": 15,
+        })
 
     def set_pos(self, vec_or_x, y = None):
         self.pos = vec_or_num(vec_or_x, y)

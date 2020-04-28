@@ -1,3 +1,4 @@
+import random
 from . import tiles
 from .vector import Vector
 
@@ -42,16 +43,25 @@ def pick_up(self, dtime, map, player):
     ch = cy + (rect[3] / METER)
 
     if cw >= self.pos[0] and cx <= (self.pos[0] + 1) and ch >= self.pos[1] and cy <= (self.pos[1] + 1):
+        player.coins += random.randint(self.min_value, self.max_value)
+        player.hud.change("coincount", {
+            "text": player.coins
+        })
         map.set_tile(*self.pos, None)
+
 
 tiles.register_tile("loot:coins", {
     "textures": ["loot_gold.png"],
     "solid": False,
+    "min_value": 2,
+    "max_value": 5,
     "on_step": pick_up
 })
 
 tiles.register_tile("loot:pile", {
     "textures": ["loot_pile.png"],
     "solid": False,
+    "min_value": 6,
+    "max_value": 12,
     "on_step": pick_up
 })

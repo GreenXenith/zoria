@@ -33,7 +33,6 @@ map.generate()
 player = Player()
 player.sprite.texture = spritesheet.SpriteSheet(assets.get("character.png"), 32, 48)
 player.sprite.set_rect((8, 32, 16, 16))
-# TODO: Scale character up x2 (1.5m)
 # TODO: Use asset loader for spritesheets
 player.sprite.texture.set_animation(0, 0, 0)
 player.set_pos(1.1, 1.1)
@@ -103,6 +102,8 @@ while 1:
                     # Draw player
                     screen.blit(pygame.transform.scale(player.sprite.texture.frame, [round(SCALE * player.sprite.texture.width), round(SCALE * player.sprite.texture.height)]), camera)
                     player_rendered = True
+    
+    player.hud.render(screen, SCALE)
                     
     pygame.display.update()
     # pygame.display.flip()

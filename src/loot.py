@@ -8,8 +8,8 @@ def rand(*args):
 
 class Placer():
     loot = [
-        ["loot:coins", 5],
-        ["loot:pile", 30],
+        ["loot:coins", 10],
+        ["loot:pile", 50],
     ]
 
     def populate(self, map):

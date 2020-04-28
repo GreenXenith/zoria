@@ -107,11 +107,11 @@ class Generator():
 
     def horiz_corridor(self, x1, x2, y):
         for row in range(y - 1, y + 3):
-            for col in range(x1 - 1, x2 + 2):
+            for col in range(x1 - 1, x2 + 3):
                 self.board[row][col] = 1
 
     def vert_corridor(self, y1, y2, x):
-        for row in range(y1, y2 + 2):
+        for row in range(y1, y2 + 3):
             for col in range(x - 1, x + 3):
                 self.board[row][col] = 1
 

@@ -84,17 +84,16 @@ while 1:
                     tilex = (x * METER) - ((tilesize[0] / 2) - (METER / 2))
                     tiley = (y * METER) - (tilesize[1] - METER)
 
-                    # TODO: Fix scaling gaps
                     pos = [
-                        camera[0] + math.floor((tilex - (player.pos.x * METER)) * SCALE),
-                        camera[1] + math.ceil((tiley - (player.pos.y * METER)) * SCALE)
+                        camera[0] + round((tilex - (player.pos.x * METER)) * SCALE),
+                        camera[1] + round((tiley - (player.pos.y * METER)) * SCALE)
                     ]
 
                     # Only render tile if on-screen
                     if pos[0] + scaledsize[0] >= 0 and pos[0] <= winsize[0] and \
                             pos[1] + scaledsize[1] >= 0 and pos[1] <= winsize[1]:
                         tile.on_step(dtime, map, player)
-                        screen.blit(pygame.transform.scale(texture, [math.floor(scaledsize[0]), math.ceil(scaledsize[1])]), pos)
+                        screen.blit(pygame.transform.scale(texture, [round(scaledsize[0]) + 1, round(scaledsize[1]) + 1]), pos)
 
                 # DEBUG
                 # text = arial.render(str(int(x)) + ", " + str(int(y)), False, (255, 255, 255))

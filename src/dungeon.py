@@ -2,17 +2,10 @@
 Dungeon Generator
 Based on https://www.jamesbaum.co.uk/blether/procedural-level-generation-rust/
 """
-
-import random
-import time
 import math
+from .rand import rand
 from .tiles import Tile
 from .vector import Vector
-
-# Helper functions
-def rand(*args):
-    random.seed(time.clock())
-    return random.randint(*args)
 
 # Room class for generation handling
 class Room():
@@ -115,11 +108,11 @@ class Generator():
             for col in range(x - 1, x + 3):
                 self.board[row][col] = 1
 
-    def generate(self, map):
+    def generate(self, map, z):
         for y in range(self.height):
             for x in range(self.width):
                 if self.board[y][x] == 1:
-                    map.set_tile(x, y, 0, "map:floor")
+                    map.set_tile(x, y, z, "map:floor")
 
                     if self.board[y][x] == 1:
                         # Adjacent void (Corresponds with rotation map below)
@@ -176,5 +169,5 @@ class Generator():
                             rot = rmap[drot]
 
                         if tile != "":
-                            map.set_tile(x, y, 1, tile)
-                            map.get_tile(x, y, 1).set_rotation(rot)
+                            map.set_tile(x, y, z + 1, tile)
+                            map.get_tile(x, y, z + 1).set_rotation(rot)

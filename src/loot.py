@@ -1,10 +1,4 @@
-import random
-import time
-import math
-
-def rand(*args):
-    random.seed(time.clock())
-    return random.randint(*args)
+from .rand import rand
 
 class Placer():
     loot = [

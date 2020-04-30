@@ -5,10 +5,14 @@ keybinds = {
     "down": ["s", "DOWN"],
     "left": ["a", "LEFT"],
     "right": ["d", "RIGHT"],
+    "shift": ["RSHIFT", "LSHIFT"],
 }
 
 def is_down(control):
-    keys = pygame.key.get_pressed()
-    for key in keybinds[control]:
-        if keys[getattr(pygame, "K_" + key)]:
-            return True
+    try:
+        keys = pygame.key.get_pressed()
+        for key in keybinds[control]:
+            if keys[getattr(pygame, "K_" + key)]:
+                return True
+    except:
+        return False

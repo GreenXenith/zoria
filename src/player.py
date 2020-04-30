@@ -7,6 +7,8 @@ from .sprite import Sprite
 
 class Player:
     pos = Vector(0, 0)
+    z = 1
+    last_level_change = 0
 
     hp = 100
     coins = 0
@@ -59,13 +61,13 @@ class Player:
         oldx = self.pos.x
         self.set_pos(self.pos.x + self.vel.x * self.speed * dtime, self.pos.y)
 
-        if map.collides(self.pos, self.sprite.rect):
+        if map.collides(self.pos, self.z, self.sprite.rect):
             self.set_pos(oldx, self.pos.y)
 
         oldy = self.pos.y
         self.set_pos(self.pos.x, self.pos.y + self.vel.y * self.speed * dtime)
 
-        if map.collides(self.pos, self.sprite.rect):
+        if map.collides(self.pos, self.z, self.sprite.rect):
             self.set_pos(self.pos.x, oldy)
 
         if controller.is_down("up") or controller.is_down("down") or \

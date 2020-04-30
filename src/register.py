@@ -1,7 +1,10 @@
+import math
 import random
-from . import tiles
+import time
+from . import controller, tiles
 from .vector import Vector
 
+# Structure tiles
 tiles.register_tile("map:floor", {
     "textures": ["floor.png"],
 })
@@ -33,7 +36,45 @@ tiles.register_tile("map:wall_corner_outer", {
     ],
 })
 
-def pick_up(self, dtime, map, player):
+# Stairs
+def prev_level(self, _, map, player):
+    # Lazy distance check
+    if math.hypot(player.pos.x - self.pos[0], player.pos.y + 1 - self.pos[1]) <= 2 \
+            and player.pos.y + 0.5 > self.pos[1] and controller.is_down("shift") \
+            and time.time() - player.last_level_change > 0.5: # Prevent multiple shifts
+        player.z = max(1, player.z - 2)
+        generator = map.generators[player.z - 1]
+
+        player.set_pos(generator.exit[0], generator.exit[1] - 1)
+        player.dir = 2
+        player.last_level_change = time.time()
+
+tiles.register_tile("map:stair_up", {
+    "textures": ["stair_up.png"],
+    "solid": True,
+    "on_step": prev_level,
+})
+
+def next_level(self, _, map, player):
+    if math.hypot(player.pos.x - self.pos[0], player.pos.y + 1 - self.pos[1]) <= 1 \
+            and controller.is_down("shift") and time.time() - player.last_level_change > 0.5:
+        player.z += 2
+        if not player.z - 1 in map.generators:
+            map.generate(player.z - 1)
+        generator = map.generators[player.z - 1]
+
+        player.set_pos(generator.enterance[0], generator.enterance[1] + 0.1)
+        player.dir = 0
+        player.last_level_change = time.time()
+
+tiles.register_tile("map:stair_down", {
+    "textures": ["stair_down.png"],
+    "solid": False,
+    "on_step": next_level,
+})
+
+# Loot
+def pick_up(self, _, map, player):
     METER = map.METER
     rect = player.sprite.get_rect()
     cx = player.pos.x + (rect[0] / METER)

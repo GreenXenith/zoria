@@ -13,8 +13,12 @@ def populate(map, generator, z):
     lroom = generator.rooms[len(generator.rooms) - 1] # Last room
     exitx = lroom.x + rand(2, lroom.width - 2)
     exity = lroom.y + rand(2, lroom.height - 3)
-    map.set_tile(exitx, exity, z + 1, "map:stair_down")
+    map.set_tile(exitx, exity, z + 1, "map:stair_down_locked")
     generator.exit = (exitx, exity)
+
+    # Place key
+    froom = generator.rooms[0] # First room
+    map.set_tile(froom.x + rand(1, froom.width - 2), froom.y + rand(1, froom.height - 3), z + 1, "item:key")
 
     # Place loot
     loot = [
@@ -26,7 +30,7 @@ def populate(map, generator, z):
         if rand(0, 2) != 0: # 1 in 3 chance of no loot
             for y in range(1, room.height - 2):
                 for x in range(1, room.width - 1):
-                    if map.get_tile(x, y, z) == None:
+                    if map.get_tile(room.x + x, room.y + y, z + 1) == None:
                         placed = False
                         for l in loot:
                             if not placed and rand(1, l[1]) == 1: # 1 in n chance of placing

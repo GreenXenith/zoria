@@ -35,7 +35,8 @@ player.sprite.texture = spritesheet.SpriteSheet(assets.get("character.png"), 32,
 player.sprite.set_rect((8, 32, 16, 16))
 # TODO: Use asset loader for spritesheets
 player.sprite.texture.set_animation(0, 0, 0)
-player.set_pos(map.generators[0].rooms[0].x + 2, map.generators[0].rooms[0].y + 2)
+mroom = map.generators[0].rooms[int(math.ceil(len(map.generators[0].rooms) / 2))]
+player.set_pos(mroom.cx, mroom.cy)
 
 CENTER = [winsize[0] / 2, winsize[1] / 2]
 BGCOLOR = pygame.Color("#3e1202")

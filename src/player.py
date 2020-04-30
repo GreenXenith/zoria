@@ -13,6 +13,8 @@ class Player:
     hp = 100
     coins = 0
 
+    key = False
+
     dir = 0
     vel = Vector(0, 0)
 

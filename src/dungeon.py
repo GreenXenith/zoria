@@ -28,10 +28,10 @@ class Room():
 
 # Generator as class in case its used multiple times
 class Generator():
-    rooms = [] # Stores room objects
-    board = [] # Map of zeros and ones
-
     def __init__(self, width, height = None):
+        self.rooms = [] # Stores room objects
+        self.board = [] # Map of zeros and ones
+
         self.width = width
         self.height = height or width
 
@@ -107,6 +107,12 @@ class Generator():
         for row in range(y1, y2 + 3):
             for col in range(x - 1, x + 3):
                 self.board[row][col] = 1
+    
+    def value_at(self, x, y):
+        try:
+            return self.board[y][x]
+        except:
+            return 0
 
     def generate(self, map, z):
         for y in range(self.height):
@@ -127,7 +133,8 @@ class Generator():
                         arot = 0 # Last adjacent key
                         for key in range(len(asides)):
                             off = asides[key]
-                            if self.board[y + off[1]][x + off[0]] == 0:
+                            # if self.board[y + off[1]][x + off[0]] == 0:
+                            if self.value_at(x + off[0], y + off[1]) == 0:
                                 adj += 1
                                 arot = key
 
@@ -143,14 +150,14 @@ class Generator():
                         drot = None # Last diagonal key
                         for key in range(len(dsides)):
                             off = dsides[key]
-                            if self.board[y + off[1]][x + off[0]] == 0:
+                            if self.value_at(x + off[0], y + off[1]) == 0:
                                 dia += 1
                                 # Only set key if opposite tile is floor
-                                if self.board[y - off[1]][x - off[0]] == 1:
+                                if self.value_at(x - off[0], y - off[1]) == 1:
                                     if drot == None:
                                         drot = key
                                     else:
-                                        if self.board[y][x + off[0]] == 0 and self.board[y + off[1]][x] == 0:
+                                        if self.value_at(x + off[0], y) == 0 and self.value_at(x, y + off[1]) == 0:
                                             drot = key
 
                         if drot == None:

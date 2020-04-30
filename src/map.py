@@ -17,8 +17,7 @@ class Map:
     def generate(self):
         self.generator = dungeon.Generator(80)
         self.generator.generate(self, 0)
-        self.placer = loot.Placer()
-        self.placer.populate(self)
+        loot.place_loot(self, 0)
 
     def collides(self, pos, rect):
         # Player position handling really needs to be reworked ...

@@ -10,7 +10,7 @@ def populate(map, generator, z):
         map.set_tile(enterx, entery, z + 1, "map:stair_up")
         generator.enterance = (enterx, entery)
 
-    lroom = generator.rooms[0]#len(generator.rooms) - 1] # Last room
+    lroom = generator.rooms[len(generator.rooms) - 1] # Last room
     exitx = lroom.x + rand(2, lroom.width - 2)
     exity = lroom.y + rand(2, lroom.height - 3)
     map.set_tile(exitx, exity, z + 1, "map:stair_down")

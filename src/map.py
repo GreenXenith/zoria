@@ -16,7 +16,7 @@ class Map:
     #         self.map = json.load(file)
 
     def generate(self, z):
-        generator = dungeon.Generator(80)
+        generator = dungeon.Generator(40 + 4 * math.floor(z / 2)) # +4m^2 per level
         generator.generate(self, z)
         self.generators[z] = generator
 

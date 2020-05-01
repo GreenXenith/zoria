@@ -73,6 +73,7 @@ def unlock_next(self, _, map, player):
 
         map.set_tile(*self.pos, "map:stair_down")
         player.hud.remove("key")
+        player.key = False
         player.last_level_change = time.time()
 
 tiles.register_tile("map:stair_down_locked", {
@@ -80,7 +81,6 @@ tiles.register_tile("map:stair_down_locked", {
     "solid": False,
     "on_step": unlock_next,
 })
-
 
 def next_level(self, _, map, player):
     if math.hypot(player.pos.x - self.pos[0], player.pos.y + 1 - self.pos[1]) <= 1 \

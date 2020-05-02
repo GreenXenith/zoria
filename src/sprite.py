@@ -15,6 +15,7 @@ class Sprite:
     def __init__(self, name, pos, z):
         self.name = name
         self.pos = pos
+        self.rot = 0
         self.z = z
         self.vel = Vector(0, 0)
         for key in registered_sprites[name]:

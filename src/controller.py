@@ -6,6 +6,7 @@ keybinds = {
     "left": ["a", "LEFT"],
     "right": ["d", "RIGHT"],
     "shift": ["RSHIFT", "LSHIFT"],
+    "attack": ["SPACE"],
 }
 
 def is_down(control):

@@ -2,7 +2,7 @@ import math, random, time
 from . import assets, controller, sprite, spritesheet, tiles
 from .vector import Vector
 
-def is_collided(tile, map, player):
+def is_collided(pos, map, player):
     METER = map.METER
     rect = player.rect
     cx = player.pos.x + (rect[0] / METER)
@@ -11,7 +11,7 @@ def is_collided(tile, map, player):
     cw = cx + (rect[2] / METER)
     ch = cy + (rect[3] / METER)
 
-    if cw >= tile.pos[0] and cx <= (tile.pos[0] + 1) and ch >= tile.pos[1] and cy <= (tile.pos[1] + 1):
+    if cw >= pos[0] and cx <= (pos[0] + 1) and ch >= pos[1] and cy <= (pos[1] + 1):
         return True
 
 # Structure tiles
@@ -100,9 +100,9 @@ tiles.register_tile("map:stair_down", {
 
 # Items
 def pick_up_key(self, dtime, map, player):
-    if is_collided(self, map, player):
+    if is_collided(self.pos, map, player):
         player.key = True
-        player.hud.add("key", [0, 0.8], {
+        player.hud.add("key", [0, 0.6], {
             "type": "image",
             "texture": "key.png",
             "scale": 1.5
@@ -117,7 +117,7 @@ tiles.register_tile("item:key", {
 
 # Loot
 def pick_up_coin(self, dtime, map, player):
-    if is_collided(self, map, player):
+    if is_collided(self.pos, map, player):
         player.coins += random.randint(self.min_value, self.max_value)
         player.hud.change("coincount", {
             "text": player.coins
@@ -141,10 +141,37 @@ tiles.register_tile("loot:pile", {
     "on_step": pick_up_coin
 })
 
+def pick_up_health(self, dtime, map, player):
+    if is_collided((self.pos.x, self.pos.y), map, player):
+        player.hp += 3
+        player.hud.change("hp", {
+            "text": player.hp
+        })
+        map.remove_sprite(self.id)
+
+sprite.register_sprite("item:health", {
+    "texture": spritesheet.SpriteSheet(assets.get("health.png"), 32, 32),
+    "on_step": pick_up_health
+})
+
+def pick_up_xp(self, dtime, map, player):
+    if is_collided((self.pos.x, self.pos.y), map, player):
+        player.xp += self.amount
+        player.hud.change("xp", {
+            "text": player.xp
+        })
+        map.remove_sprite(self.id)
+
+sprite.register_sprite("item:xp", {
+    "texture": spritesheet.SpriteSheet(assets.get("xp.png"), 32, 32),
+    "on_step": pick_up_xp
+})
+
 # Enemies
 def spawn_slime(self, dtime, map, player):
     map.set_tile(*self.pos, None)
     sprite = map.add_sprite(*self.pos, "enemy:slime")
+    sprite.hp = 4 + (2 * sprite.z)
     sprite.set_rect(0, 0, 32, 32)
     sprite.texture.set_animation(0, 3, 4)
     sprite.target_pos = Vector(self.pos[0], self.pos[1])
@@ -154,6 +181,11 @@ tiles.register_tile("enemy:slime", {
     "on_step": spawn_slime
 })
 
+tiles.register_tile("enemy:slime_dead", {
+    "textures": ["slime_dead.png"],
+    "solid": False,
+})
+
 from .slime import slime_logic
 
 sprite.register_sprite("enemy:slime", {
@@ -161,4 +193,16 @@ sprite.register_sprite("enemy:slime", {
     "timer": 0,
     "target_pos": Vector(0),
     "on_step": slime_logic
+})
+
+# Effects
+def slash(self, dtime, map, player):
+    self.timer += dtime
+    if self.timer >= 2 / 4:
+        map.remove_sprite(self.id)
+
+sprite.register_sprite("player:slash", {
+    "texture": spritesheet.SpriteSheet(assets.get("magic_slash.png"), 32, 32),
+    "timer": 0,
+    "on_step": slash
 })

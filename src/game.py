@@ -31,7 +31,7 @@ map = Map(METER)
 map.generate(0)
 
 # Player
-player = Player()
+player = Player(map)
 player.texture = spritesheet.SpriteSheet(assets.get("character.png"), 32, 48)
 player.rect = pygame.Rect(8, 32, 16, 16)
 # TODO: Use asset loader for spritesheets
@@ -115,7 +115,7 @@ while 1:
                             pos = get_screenpos(sprite.pos.x, sprite.pos.y)
                             if pos[0] + scaledsize[0] >= 0 and pos[0] <= winsize[0] and \
                                     pos[1] + scaledsize[1] >= 0 and pos[1] <= winsize[1]:
-                                screen.blit(pygame.transform.scale(sprite.texture.frame, scaledsize), pos)
+                                screen.blit(pygame.transform.rotate(pygame.transform.scale(sprite.texture.frame, scaledsize), sprite.rot), pos)
 
     player.hud.render(screen, SCALE)
 

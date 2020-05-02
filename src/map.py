@@ -1,6 +1,6 @@
 import pygame
 import json, math
-from . import assets, dungeon, level, sprite, tiles
+from . import assets, dungeon, level, rand, sprite, tiles
 from .sprite import Sprite
 from .tiles import Tile
 from .vector import *
@@ -69,10 +69,18 @@ class Map:
             self.sprites.append([])
 
         sprite = Sprite(name, Vector(x, y), z)
-        sprite.idx = len(self.sprites[z])
+        sprite.id = rand.rand(0, 65535)
         self.sprites[z].append(sprite)
         return sprite
 
+    def remove_sprite(self, id):
+        for layer in self.sprites:
+            for i in range(len(layer)):
+                if layer[i].id == id:
+                    layer.pop(i)
+                    return
+
+    # Bresenham's line algorithm
     # Based on https://www.codeproject.com/Articles/15604/Ray-casting-in-a-2D-tile-based-environment
     def raycast(self, pos1, pos2, z):
         p1 = Vector(pos1.x, pos1.y)
@@ -109,7 +117,7 @@ class Map:
             if steep:
                 check = (y, x)
 
-            tile = self.get_tile(round(check[0]), round(check[1]), z)
+            tile = self.get_tile(math.ceil(check[0]), math.ceil(check[1]), z)
             if tile and tile.is_solid():
                 result.append(check)
 

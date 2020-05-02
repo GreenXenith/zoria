@@ -1,12 +1,10 @@
-import math
-import random
-import time
-from . import controller, tiles
+import math, random, time
+from . import assets, controller, sprite, spritesheet, tiles
 from .vector import Vector
 
 def is_collided(tile, map, player):
     METER = map.METER
-    rect = player.sprite.get_rect()
+    rect = player.rect
     cx = player.pos.x + (rect[0] / METER)
     cy = player.pos.y + (rect[1] / METER)
 
@@ -49,7 +47,7 @@ tiles.register_tile("map:wall_corner_outer", {
 })
 
 # Stairs
-def prev_level(self, _, map, player):
+def prev_level(self, dtime, map, player):
     # Lazy distance check
     if math.hypot(player.pos.x - self.pos[0], player.pos.y + 1 - self.pos[1]) <= 2 \
             and player.pos.y + 0.5 > self.pos[1] and controller.is_down("shift") \
@@ -67,7 +65,7 @@ tiles.register_tile("map:stair_up", {
     "on_step": prev_level,
 })
 
-def unlock_next(self, _, map, player):
+def unlock_next(self, dtime, map, player):
     if math.hypot(player.pos.x - self.pos[0], player.pos.y + 1 - self.pos[1]) <= 1 \
             and player.key and controller.is_down("shift") and time.time() - player.last_level_change > 0.5:
 
@@ -101,7 +99,7 @@ tiles.register_tile("map:stair_down", {
 })
 
 # Items
-def pick_up_key(self, _, map, player):
+def pick_up_key(self, dtime, map, player):
     if is_collided(self, map, player):
         player.key = True
         player.hud.add("key", [0, 0.8], {
@@ -118,7 +116,7 @@ tiles.register_tile("item:key", {
 })
 
 # Loot
-def pick_up_coin(self, _, map, player):
+def pick_up_coin(self, dtime, map, player):
     if is_collided(self, map, player):
         player.coins += random.randint(self.min_value, self.max_value)
         player.hud.change("coincount", {
@@ -141,4 +139,26 @@ tiles.register_tile("loot:pile", {
     "min_value": 6,
     "max_value": 12,
     "on_step": pick_up_coin
+})
+
+# Enemies
+def spawn_slime(self, dtime, map, player):
+    map.set_tile(*self.pos, None)
+    sprite = map.add_sprite(*self.pos, "enemy:slime")
+    sprite.set_rect(0, 0, 32, 32)
+    sprite.texture.set_animation(0, 3, 4)
+    sprite.target_pos = Vector(self.pos[0], self.pos[1])
+
+tiles.register_tile("enemy:slime", {
+    "textures": ["slime_spawner.png"],
+    "on_step": spawn_slime
+})
+
+from .slime import slime_logic
+
+sprite.register_sprite("enemy:slime", {
+    "texture": spritesheet.SpriteSheet(assets.get("slime.png"), 32, 32),
+    "timer": 0,
+    "target_pos": Vector(0),
+    "on_step": slime_logic
 })

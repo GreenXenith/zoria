@@ -3,12 +3,14 @@ import math
 from . import controller
 from .vector import *
 from .hud import Hud
-from .sprite import Sprite
 
 class Player:
     pos = Vector(0, 0)
     z = 1
     last_level_change = 0
+
+    rect = pygame.Rect(0, 0, 0, 0)
+    texture = "none.png"
 
     hp = 100
     coins = 0
@@ -22,7 +24,6 @@ class Player:
     speed = 3 # meters per second
 
     def __init__(self):
-        self.sprite = Sprite()
         self.hud = Hud()
         self.hud.add("coin", [0, 0.9], {
             "type": "image",
@@ -63,17 +64,17 @@ class Player:
         oldx = self.pos.x
         self.set_pos(self.pos.x + self.vel.x * self.speed * dtime, self.pos.y)
 
-        if map.collides(self.pos, self.z, self.sprite.rect):
+        if map.collides(self.pos, self.z, self.rect):
             self.set_pos(oldx, self.pos.y)
 
         oldy = self.pos.y
         self.set_pos(self.pos.x, self.pos.y + self.vel.y * self.speed * dtime)
 
-        if map.collides(self.pos, self.z, self.sprite.rect):
+        if map.collides(self.pos, self.z, self.rect):
             self.set_pos(self.pos.x, oldy)
 
         if controller.is_down("up") or controller.is_down("down") or \
                 controller.is_down("left") or controller.is_down("right"):
-            self.sprite.texture.set_animation(self.dir * 4, (self.dir * 4) + 3, self.speed * 2)
+            self.texture.set_animation(self.dir * 4, (self.dir * 4) + 3, self.speed * 2)
         else:
-            self.sprite.texture.set_animation(self.dir * 4, self.dir * 4, 0)
+            self.texture.set_animation(self.dir * 4, self.dir * 4, 0)

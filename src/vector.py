@@ -1,4 +1,6 @@
-from math import floor, ceil
+# Vector class used for both positional vectors and directional vectors
+
+import math
 
 def vec_or_num(x, y = None):
     if (type(x) is int or type(x) is float) == True:
@@ -34,7 +36,7 @@ class Vector:
         vec = vec_or_num(b)
         return Vector(self.x * vec.x, self.y * vec.y)
 
-    def __div__(self, b):
+    def __truediv__(self, b):
         vec = vec_or_num(b)
         return Vector(self.x / vec.x, self.y / vec.y)
 
@@ -42,10 +44,35 @@ class Vector:
         return Vector(round(self.x), round(self.y))
 
     def __floor__(self):
-        return Vector(floor(self.x), floor(self.y))
+        return Vector(math.floor(self.x), math.floor(self.y))
 
     def __ceil__(self):
-        return Vector(ceil(self.x), ceil(self.y))
+        return Vector(math.ceil(self.x), math.ceil(self.y))
+    
+    def flip(self):
+        return Vector(self.y, self.x)
 
-    def apply(self, func):
-        return Vector(func(self.x), func(self.y))
+def apply(v, func):
+        return Vector(func(v.x), func(v.y))
+
+def length(v):
+    return math.hypot(v.x, v.y)
+
+def normalize(v):
+    l = length(v)
+    if l == 0:
+        return Vector(0)
+    else:
+        return v / l
+
+def distance(a, b):
+    return math.hypot(a.x - b.x, a.y - b.y)
+
+def direction(pos1, pos2):
+    return normalize(Vector(pos2.x - pos1.x, pos2.y - pos1.y))
+
+def dot(a, b):
+    return a.x * b.x + a.y * b.y
+
+def angle(a, b):
+    return dot(a, b) / (length(a) * length(b))

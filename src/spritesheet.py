@@ -4,22 +4,13 @@ import math
 spritesheets = []
 
 class SpriteSheet():
-    file = ""
-
-    start = 0
-    end = 0
-
-    speed = 0
-    clock = 0
-
-    frames = []
-    frame_total = 0
-
-    frame_index = None
-    frame = None
-
-    def __init__(self, texture, frameWidth, frameHeight = None):
+    def __init__(self, texture, frameWidth, frameHeight = None, speed = 2):
         self.file = texture
+
+        self.clock = 0
+
+        self.frames = []
+        self.frame_index = 0
 
         frameHeight = frameHeight or frameWidth
 
@@ -49,12 +40,11 @@ class SpriteSheet():
         self.yframes = yframes
         self.frame_total = total
 
-        self.frame_index = 0
         self.frame = self.frames[self.frame_index]
 
         self.start = 0
         self.end = total - 1
-        self.speed = 2
+        self.speed = speed
 
         spritesheets.append(self)
 
@@ -62,7 +52,7 @@ class SpriteSheet():
         return min(max(0, frame), self.xframes * self.yframes - 1)
 
     def set_animation(self, start, end, speed):
-        if self.start == start and self.end == end:
+        if self.start == start and self.end == end and self.speed == speed:
             return
         self.start = self.minmax(start)
         self.end = self.minmax(end)

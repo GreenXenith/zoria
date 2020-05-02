@@ -8,9 +8,10 @@ pygame.font.init()
 winsize = [800, 600]
 screen = pygame.display.set_mode(winsize, pygame.RESIZABLE)
 
-from . import assets, controller, register, spritesheet
-from .map import Map
-from .player import Player
+# Load all assets
+from . import assets
+for filename in os.listdir(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "assets")):
+    assets.load(filename)
 
 pygame.display.set_caption("Zoria")
 pygame.display.set_icon(assets.load("icon.png"))
@@ -20,9 +21,9 @@ SCALE = 2
 METER = 32
 FPS = 60
 
-# Load all assets
-for filename in os.listdir(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "assets")):
-    assets.load(filename)
+from . import controller, register, spritesheet, vector
+from .map import Map
+from .player import Player
 
 # Map
 map = Map(METER)
@@ -31,10 +32,10 @@ map.generate(0)
 
 # Player
 player = Player()
-player.sprite.texture = spritesheet.SpriteSheet(assets.get("character.png"), 32, 48)
-player.sprite.set_rect((8, 32, 16, 16))
+player.texture = spritesheet.SpriteSheet(assets.get("character.png"), 32, 48)
+player.rect = pygame.Rect(8, 32, 16, 16)
 # TODO: Use asset loader for spritesheets
-player.sprite.texture.set_animation(0, 0, 0)
+player.texture.set_animation(0, 0, 0)
 mroom = map.generators[0].rooms[int(math.ceil(len(map.generators[0].rooms) / 2))]
 player.set_pos(mroom.cx, mroom.cy)
 
@@ -42,6 +43,12 @@ CENTER = [winsize[0] / 2, winsize[1] / 2]
 BGCOLOR = pygame.Color("#3e1202")
 
 arial = pygame.font.SysFont("Arial", 10)
+
+def get_screenpos(x, y):
+    return [
+        camera[0] + round((x * METER - (player.pos.x * METER)) * SCALE),
+        camera[1] + round((y * METER - (player.pos.y * METER)) * SCALE)
+    ]
 
 # Mainloop
 clock = pygame.time.Clock()
@@ -62,7 +69,7 @@ while 1:
     spritesheet.update(dtime)
 
     # Move the map based on player position
-    psize = player.sprite.rect.size
+    psize = player.rect.size
     camera = [int(CENTER[0] - (psize[0] / 2 * SCALE)), int(CENTER[1] - (psize[1] / 2 * SCALE))]
 
     player_rendered = False
@@ -84,10 +91,7 @@ while 1:
                         tilex = (x * METER) - ((tilesize[0] / 2) - (METER / 2))
                         tiley = (y * METER) - (tilesize[1] - METER)
 
-                        pos = [
-                            camera[0] + round((tilex - (player.pos.x * METER)) * SCALE),
-                            camera[1] + round((tiley - (player.pos.y * METER)) * SCALE)
-                        ]
+                        pos = get_screenpos(tilex / METER, tiley / METER)
 
                         # Only render tile if on-screen
                         if pos[0] + scaledsize[0] >= 0 and pos[0] <= winsize[0] and \
@@ -95,11 +99,24 @@ while 1:
                             tile.on_step(dtime, map, player)
                             screen.blit(pygame.transform.scale(texture, [round(scaledsize[0]) + 1, round(scaledsize[1]) + 1]), pos)
 
-                    if not player_rendered and z == player.z and y == math.ceil(player.pos.y + 1 + player.sprite.get_rect()[3] / METER):
+                    if not player_rendered and z == player.z and y == math.ceil(player.pos.y + 1 + player.rect[3] / METER):
                         # Draw player
-                        screen.blit(pygame.transform.scale(player.sprite.texture.frame, [round(SCALE * player.sprite.texture.width), round(SCALE * player.sprite.texture.height)]), camera)
+                        screen.blit(pygame.transform.scale(player.texture.frame, [round(SCALE * player.texture.width), round(SCALE * player.texture.height)]), camera)
                         player_rendered = True
-    
+
+                # Draw sprites
+                if z < len(map.sprites):
+                    for sprite in map.sprites[z]:
+                        if y == math.ceil(sprite.pos.y):
+                            if vector.distance(sprite.pos, player.pos) <= 10:
+                                sprite.on_step(dtime, map, player)
+
+                            scaledsize = [round(SCALE * sprite.texture.width), round(SCALE * sprite.texture.height)]
+                            pos = get_screenpos(sprite.pos.x, sprite.pos.y)
+                            if pos[0] + scaledsize[0] >= 0 and pos[0] <= winsize[0] and \
+                                    pos[1] + scaledsize[1] >= 0 and pos[1] <= winsize[1]:
+                                screen.blit(pygame.transform.scale(sprite.texture.frame, scaledsize), pos)
+
     player.hud.render(screen, SCALE)
-                    
+
     pygame.display.update()

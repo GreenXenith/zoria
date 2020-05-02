@@ -1,11 +1,13 @@
 import pygame
 import json, math
-from . import assets, dungeon, level, tiles
+from . import assets, dungeon, level, sprite, tiles
+from .sprite import Sprite
 from .tiles import Tile
-from .vector import Vector
+from .vector import *
 
 class Map:
     map = []
+    sprites = []
     generators = {}
 
     def __init__(self, meter):
@@ -61,3 +63,61 @@ class Map:
             return self.map[z][y][x]
         except:
             return None
+
+    def add_sprite(self, x, y, z, name):
+        for _ in range(len(self.sprites), z + 1):
+            self.sprites.append([])
+
+        sprite = Sprite(name, Vector(x, y), z)
+        sprite.idx = len(self.sprites[z])
+        self.sprites[z].append(sprite)
+        return sprite
+
+    # Based on https://www.codeproject.com/Articles/15604/Ray-casting-in-a-2D-tile-based-environment
+    def raycast(self, pos1, pos2, z):
+        p1 = Vector(pos1.x, pos1.y)
+        p2 = Vector(pos2.x, pos2.y)
+        result = []
+
+        steep = abs(p2.y - p1.y) > abs(p2.x - p1.x)
+        if steep:
+            p1 = p1.flip()
+            p2 = p2.flip()
+
+        if p1.x > p2.x:
+            oldx = p1.x
+            p1.x = p2.x
+            p2.x = oldx
+
+            oldy = p1.y
+            p1.y = p2.y
+            p2.y = oldy
+
+        deltax = p2.x - p1.x
+        deltay = abs(p2.y - p1.y)
+        error = 0
+        ystep = 0
+        y = p1.y
+        if p1.y < p2.y:
+            ystep = 0.5
+        else:
+            ystep = -0.5
+
+        x = p1.x
+        while x <= p2.x:
+            check = (x, y)
+            if steep:
+                check = (y, x)
+
+            tile = self.get_tile(round(check[0]), round(check[1]), z)
+            if tile and tile.is_solid():
+                result.append(check)
+
+            error += deltay
+            if (2 * error >= deltax):
+                y += ystep
+                error -= deltax
+
+            x += 0.5
+
+        return result

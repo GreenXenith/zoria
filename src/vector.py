@@ -75,4 +75,6 @@ def dot(a, b):
     return a.x * b.x + a.y * b.y
 
 def angle(a, b):
-    return dot(a, b) / (length(a) * length(b))
+    mag = (length(a) * length(b))
+    if mag == 0: return 0
+    return dot(a, b) / mag

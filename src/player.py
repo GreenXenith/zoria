@@ -1,5 +1,5 @@
 import pygame
-import math
+import math, time
 from . import controller, rand, vector
 from .vector import Vector
 from .hud import Hud
@@ -18,12 +18,14 @@ class Player:
 
     key = False
 
-    dir = 0
+    dir = 1
     vel = Vector(0, 0)
+    look = Vector(1, 0)
 
     speed = 3 # meters per second
 
     attacking = False
+    last_attack = 0
 
     def __init__(self, map):
         self.map = map # Bind to map for use later
@@ -75,19 +77,23 @@ class Player:
         self.vel = Vector(0, 0)
 
         if controller.is_down("left"):
-            self.dir = 3
+            self.dir = 2
+            self.look = Vector(-1, 0)
             self.vel.x -= 1
 
         if controller.is_down("right"):
-            self.dir = 1
+            self.dir = 0
+            self.look = Vector(1, 0)
             self.vel.x += 1
 
         if controller.is_down("up"):
-            self.dir = 2
+            self.dir = 3
+            self.look = Vector(0, -1)
             self.vel.y -= 1
 
         if controller.is_down("down"):
-            self.dir = 0
+            self.dir = 1
+            self.look = Vector(0, 1)
             self.vel.y += 1
 
         if self.vel.x != 0 and self.vel.y != 0:
@@ -114,41 +120,42 @@ class Player:
         
         # Do attacking
         if controller.is_down("attack"):
-            if not self.attacking:
+            if not self.attacking and time.time() - self.last_attack >= 0.7:
+                self.last_attack = time.time()
+
+                # Slash visual
+                dirs = [
+                    (1, 0.5),
+                    (0, 1.5),
+                    (-1, 0.5),
+                    (0, -0.5),
+                ]
+                at = self.pos + Vector(*dirs[self.dir])
+                slash = self.map.add_sprite(at.x, at.y, self.z, "player:slash")
+                slash.rot = ((self.dir + 1) % 4) * -90
+                slash.texture.set_animation(0, 3, 5)
+
                 # Check for enemies
                 if self.z < len(map.sprites):
                     for sprite in map.sprites[self.z]:
                         if sprite.name[:6] == "enemy:":
-                            if vector.distance(self.pos, sprite.pos) <= 1.5:
-                                # TODO: Fix player dir
-                                rot = ((self.dir + 2) % 4) * 90
-                                if abs(rot - vector.angle(self.pos, sprite.pos)) <= 45:
-                                    sprite.hp -= 3 + (self.xp // 15)
-                                    sprite.vel = (sprite.vel * -2) + self.vel
-                                    if sprite.hp <= 0:
-                                        setat = round(sprite.pos)
-                                        map.set_tile(int(setat.x), int(setat.y), int(sprite.z), sprite.name + "_dead")
-                                        map.remove_sprite(sprite.id)
-                                        drop = rand.rand(0, 7)
-                                        if drop == 0:
-                                            item = map.add_sprite(sprite.pos.x, sprite.pos.y, sprite.z, "item:health")
-                                            item.texture.set_animation(0, 4, 3)
-                                        elif drop == 1:
-                                            item = map.add_sprite(sprite.pos.x, sprite.pos.y, sprite.z, "item:xp")
-                                            item.amount = rand.rand(3, 6)
-                                            item.texture.set_animation(0, 4, 4)
+                            if vector.distance(slash.pos, sprite.pos) <= 1:
+                                sprite.hp -= 3 + (self.xp // 15)
+                                sprite.vel = (sprite.vel * -2) + self.vel + (self.look * 2)
+                                if sprite.hp <= 0:
+                                    setat = round(sprite.pos)
+                                    map.set_tile(int(setat.x), int(setat.y), int(sprite.z), sprite.name + "_dead")
+                                    map.remove_sprite(sprite.id)
+                                    drop = rand.rand(0, 7)
+                                    if drop == 0:
+                                        item = map.add_sprite(sprite.pos.x, sprite.pos.y, sprite.z, "item:health")
+                                        item.texture.set_animation(0, 4, 3)
+                                    elif drop == 1:
+                                        item = map.add_sprite(sprite.pos.x, sprite.pos.y, sprite.z, "item:xp")
+                                        item.amount = rand.rand(3, 6)
+                                        item.texture.set_animation(0, 4, 4)
 
-                # Slash visual
-                dirs = [
-                    (0, 1.5),
-                    (1, 0.5),
-                    (0, -0.5),
-                    (-1, 0.5)
-                ]
-                at = self.pos + Vector(*dirs[self.dir])
-                sprite = self.map.add_sprite(at.x, at.y, self.z, "player:slash")
-                sprite.rot = ((self.dir + 2) % 4) * 90
-                sprite.texture.set_animation(0, 3, 5)
+
             
             self.attacking = True
         else:

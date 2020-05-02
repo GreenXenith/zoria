@@ -129,3 +129,8 @@ class Map:
             x += 0.5
 
         return result
+
+    def reset(self):
+        self.map = []
+        self.sprites = []
+        self.generators = {}

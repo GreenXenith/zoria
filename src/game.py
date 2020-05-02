@@ -21,7 +21,7 @@ SCALE = 2
 METER = 32
 FPS = 60
 
-from . import controller, register, spritesheet, vector
+from . import controller, fade, register, spritesheet, vector
 from .map import Map
 from .player import Player
 
@@ -31,9 +31,7 @@ map = Map(METER)
 map.generate(0)
 
 # Player
-player = Player(map)
-player.texture = spritesheet.SpriteSheet(assets.get("character.png"), 32, 48)
-player.rect = pygame.Rect(8, 32, 16, 16)
+player = Player(spritesheet.SpriteSheet(assets.get("character.png"), 32, 48), pygame.Rect(8, 32, 16, 16))
 # TODO: Use asset loader for spritesheets
 player.texture.set_animation(0, 0, 0)
 mroom = map.generators[0].rooms[int(math.ceil(len(map.generators[0].rooms) / 2))]
@@ -42,7 +40,7 @@ player.set_pos(mroom.cx, mroom.cy)
 CENTER = [winsize[0] / 2, winsize[1] / 2]
 BGCOLOR = pygame.Color("#2d1003")
 
-arial = pygame.font.SysFont("Arial", 10)
+player.fade = fade.Fade(255, -96)
 
 def get_screenpos(x, y):
     return [
@@ -118,5 +116,7 @@ while 1:
                                 screen.blit(pygame.transform.rotate(pygame.transform.scale(sprite.texture.frame, scaledsize), sprite.rot), pos)
 
     player.hud.render(screen, SCALE)
+
+    player.fade.update(screen, dtime)
 
     pygame.display.update()

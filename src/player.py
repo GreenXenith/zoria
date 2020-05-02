@@ -1,34 +1,35 @@
 import pygame
 import math, time
-from . import controller, rand, vector
+from . import controller, map, rand, vector
 from .vector import Vector
 from .hud import Hud
 
 class Player:
-    pos = Vector(0, 0)
-    z = 1
-    last_level_change = 0
+    def __init__(self, texture = "none.png", rect = pygame.Rect(0, 0, 0, 0)):
+        self.pos = Vector(0, 0)
+        self.z = 1
+        self.last_level_change = 0
 
-    rect = pygame.Rect(0, 0, 0, 0)
-    texture = "none.png"
+        self.rect = rect
+        self.texture = texture
 
-    hp = 30
-    xp = 0
-    coins = 0
+        self.hp = 15
+        self.dead = False
+        self.death_timer = 0
 
-    key = False
+        self.xp = 0
+        self.coins = 0
 
-    dir = 1
-    vel = Vector(0, 0)
-    look = Vector(1, 0)
+        self.key = False
 
-    speed = 3 # meters per second
+        self.dir = 1
+        self.vel = Vector(0, 0)
+        self.look = Vector(1, 0)
 
-    attacking = False
-    last_attack = 0
+        self.speed = 3 # meters per second
 
-    def __init__(self, map):
-        self.map = map # Bind to map for use later
+        self.attacking = False
+        self.last_attack = 0
 
         # Add HUD info
         self.hud = Hud()
@@ -73,6 +74,21 @@ class Player:
         self.pos = vector.vec_or_num(vec_or_x, y)
 
     def update(self, dtime, map):
+        if self.dead:
+            self.death_timer += dtime
+            if self.death_timer >= 6:
+                map.reset()
+                map.generate(0)
+
+                self.__init__(self.texture, self.rect)
+                mroom = map.generators[0].rooms[int(math.ceil(len(map.generators[0].rooms) / 2))]
+                self.set_pos(mroom.cx, mroom.cy)
+
+                self.fade.text = "You died."
+                self.fade.rate = -64
+                self.fade.start = 255
+            return
+
         # Input handling
         self.vel = Vector(0, 0)
 
@@ -131,7 +147,7 @@ class Player:
                     (0, -0.5),
                 ]
                 at = self.pos + Vector(*dirs[self.dir])
-                slash = self.map.add_sprite(at.x, at.y, self.z, "player:slash")
+                slash = map.add_sprite(at.x, at.y, self.z, "player:slash")
                 slash.rot = ((self.dir + 1) % 4) * -90
                 slash.texture.set_animation(0, 3, 5)
 
@@ -155,8 +171,6 @@ class Player:
                                         item.amount = rand.rand(3, 6)
                                         item.texture.set_animation(0, 4, 4)
 
-
-            
             self.attacking = True
         else:
             self.attacking = False
@@ -166,6 +180,13 @@ class Player:
         self.hud.change("hp", {
             "text": self.hp
         })
+
+        if self.hp == 0:
+            self.dead = True
+            self.texture.set_animation(16, 19, 8, False)
+            self.fade.rate = 96
+            self.fade.start = 0
+            self.fade.text = "You died."
 
     def get_hp(self):
         return self.hp

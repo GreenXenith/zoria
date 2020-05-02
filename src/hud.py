@@ -7,7 +7,7 @@ def make_element(defn, scale):
 
     if defn["type"] == "text":
         defaults = {
-            "font": "Arial",
+            "font": "Times New Roman",
             "color": (255, 255, 255),
             "size": 45,
         }

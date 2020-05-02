@@ -17,7 +17,7 @@ def slime_logic(self, dtime, map, player):
             self.vel = vector.direction(self.pos, self.target_pos) * 1.5
 
         if vector.distance(self.pos, player.pos) <= 1:
-            if rand(0, 20) == 0:
+            if rand(0, 15) == 0:
                 player.set_hp(player.hp - 2)
         
         if self.target_pos == self.pos:

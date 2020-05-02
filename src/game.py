@@ -40,7 +40,7 @@ mroom = map.generators[0].rooms[int(math.ceil(len(map.generators[0].rooms) / 2))
 player.set_pos(mroom.cx, mroom.cy)
 
 CENTER = [winsize[0] / 2, winsize[1] / 2]
-BGCOLOR = pygame.Color("#3e1202")
+BGCOLOR = pygame.Color("#2d1003")
 
 arial = pygame.font.SysFont("Arial", 10)
 

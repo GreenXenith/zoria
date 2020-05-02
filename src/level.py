@@ -40,10 +40,13 @@ def populate(map, generator, z):
     # Place enemy spawners
     for room in generator.rooms:
         if room == froom or room == lroom or (room != mroom and rand(0, 1) == 0): # 1 in 2 chance of enemies
+            max_count = rand(3, (z * 2) + 3)
+            count = 0
             for y in range(1, room.height - 2):
                 for x in range(1, room.width - 1):
                     if map.get_tile(room.x + x, room.y + y, z + 1) == None:
-                        if rand(1, 15) == 1:
+                        if count < max_count and rand(1, 15) <= 1 + (z // 4):
                             map.set_tile(room.x + x, room.y + y, z + 1, "enemy:slime")
+                            count += 1
 
 

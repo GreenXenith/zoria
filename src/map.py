@@ -13,10 +13,6 @@ class Map:
     def __init__(self, meter):
         self.METER = meter # Pixels per 1 meter
 
-    # def load(self, filename):
-    #     with open(filename) as file:
-    #         self.map = json.load(file)
-
     def generate(self, z):
         generator = dungeon.Generator(40 + 4 * math.floor(z / 2)) # +4m^2 per level
         generator.generate(self, z)

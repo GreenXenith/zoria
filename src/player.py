@@ -133,7 +133,7 @@ class Player:
             self.texture.set_animation(self.dir * 4, (self.dir * 4) + 3, self.speed * 2)
         else:
             self.texture.set_animation(self.dir * 4, self.dir * 4, 0)
-        
+
         # Do attacking
         if controller.is_down("attack"):
             if not self.attacking and time.time() - self.last_attack >= 0.7:
@@ -157,7 +157,7 @@ class Player:
                         if sprite.name[:6] == "enemy:":
                             if vector.distance(slash.pos, sprite.pos) <= 1:
                                 sprite.hp -= 3 + (self.xp // 15)
-                                sprite.vel = (sprite.vel * -2) + self.vel + (self.look * 2)
+                                sprite.vel = (sprite.vel * -2) + self.vel + (self.look * 2) # Knockback
                                 if sprite.hp <= 0:
                                     setat = round(sprite.pos)
                                     map.set_tile(int(setat.x), int(setat.y), int(sprite.z), sprite.name + "_dead")

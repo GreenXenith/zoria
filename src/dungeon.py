@@ -26,7 +26,7 @@ class Room():
     def intersects(self, other):
         return self.left <= other.right and self.right >= other.left and self.top <= other.bottom and self.bottom >= other.top
 
-# Generator as class in case its used multiple times
+# Generator as class (for multiple levels)
 class Generator():
     def __init__(self, width, height = None):
         self.rooms = [] # Stores room objects
@@ -79,6 +79,7 @@ class Generator():
             room1 = self.rooms[i]
             room2 = self.rooms[i + 1]
 
+            # Horizontal/vertical connections
             if rand(0, 2) == 0:
                 if room1.cx <= room2.cx:
                     self.horiz_corridor(room1.cx, room2.cx, room1.cy)
@@ -107,7 +108,7 @@ class Generator():
         for row in range(y1, y2 + 3):
             for col in range(x - 1, x + 3):
                 self.board[row][col] = 1
-    
+
     def value_at(self, x, y):
         try:
             return self.board[y][x]
@@ -133,7 +134,6 @@ class Generator():
                         arot = 0 # Last adjacent key
                         for key in range(len(asides)):
                             off = asides[key]
-                            # if self.board[y + off[1]][x + off[0]] == 0:
                             if self.value_at(x + off[0], y + off[1]) == 0:
                                 adj += 1
                                 arot = key

@@ -19,7 +19,7 @@ class Vector:
     def __eq__(self, b):
         vec = vec_or_num(b)
         return self.x == vec.x and self.y == vec.y
-    
+
     def __ne__(self, b):
         vec = vec_or_num(b)
         return self.x != vec.x or self.y != vec.y
@@ -48,7 +48,7 @@ class Vector:
 
     def __ceil__(self):
         return Vector(math.ceil(self.x), math.ceil(self.y))
-    
+
     def flip(self):
         return Vector(self.y, self.x)
 

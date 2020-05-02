@@ -4,7 +4,7 @@ import math
 def populate(map, generator, z):
     # Place stairways
     mroom = generator.rooms[int(math.ceil(len(generator.rooms) / 2))] # Middle room
-    if z != 0:
+    if z != 0: # Don't put a stair up on the first level
         enterx = mroom.x + rand(2, mroom.width - 2)
         entery = mroom.y + rand(2, mroom.height - 3)
         map.set_tile(enterx, entery, z + 1, "map:stair_up")
@@ -37,7 +37,7 @@ def populate(map, generator, z):
                                 map.set_tile(room.x + x, room.y + y, z + 1, l[0])
                                 placed = True
 
-    # Place enemy spawners
+    # Place enemy spawners (level-based)
     for room in generator.rooms:
         if room == froom or room == lroom or (room != mroom and rand(0, 1) == 0): # 1 in 2 chance of enemies
             max_count = rand(3, (z * 2) + 3)

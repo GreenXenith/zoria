@@ -6,7 +6,7 @@ class Fade():
         self.image = pygame.Surface(rect.size, flags=pygame.SRCALPHA)
         self.alpha = start
         self.rate = rate
-        self.text = ""
+        self.text = "" # Used for death message
 
     def update(self, surface, dtime):
         self.alpha = max(0, min(self.alpha + int(self.rate * dtime), 255))
@@ -16,6 +16,7 @@ class Fade():
             self.image.fill((0, 0, 0, self.alpha))
             surface.blit(self.image, (0, 0))
 
+            # Alpha surface blitting for translucent text
             text = pygame.font.SysFont("Times New Roman", round(rect.width / 16)).render(self.text, True, (255, 255, 255))
             alphasurf = pygame.Surface(text.get_size(), pygame.SRCALPHA)
             alphasurf.fill((255, 255, 255, self.alpha))

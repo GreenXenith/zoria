@@ -31,7 +31,7 @@ class Sprite:
 
     def set_rect(self, x, y, w, h):
         self.rect = pygame.Rect(x, y, w, h)
-    
+
     def get_rect(self):
         return self.rect
 

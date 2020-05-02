@@ -84,7 +84,7 @@ def next_level(self, _, map, player):
     if math.hypot(player.pos.x - self.pos[0], player.pos.y + 1 - self.pos[1]) <= 1 \
             and controller.is_down("shift") and time.time() - player.last_level_change > 0.5:
         player.z += 2
-        if not player.z - 1 in map.generators:
+        if not player.z - 1 in map.generators: # Generate level if new
             map.generate(player.z - 1)
         generator = map.generators[player.z - 1]
 

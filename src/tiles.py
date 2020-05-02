@@ -3,6 +3,8 @@ import pygame
 global registered_tiles
 registered_tiles = {}
 
+# Content IDs are currently unused
+# They would be used for map-saving
 content_ids = []
 content_id_map = {}
 
@@ -50,7 +52,7 @@ class Tile:
 
     def is_solid(self):
         return self.get("solid") == True
-    
+
     def on_step(self, dtime, map, player):
         if "on_step" in registered_tiles[self.name]:
             registered_tiles[self.name]["on_step"](self, dtime, map, player)

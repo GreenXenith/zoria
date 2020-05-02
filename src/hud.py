@@ -2,6 +2,7 @@ import pygame
 import math
 from . import assets
 
+# Returns a surface that can be blitted
 def make_element(defn, scale):
     element = None
 

@@ -27,7 +27,6 @@ from .player import Player
 
 # Map
 map = Map(METER)
-# map.load("map.json")
 map.generate(0)
 
 # Player
@@ -40,6 +39,7 @@ player.set_pos(mroom.cx, mroom.cy)
 CENTER = [winsize[0] / 2, winsize[1] / 2]
 BGCOLOR = pygame.Color("#2d1003")
 
+# Fade from/to black
 player.fade = fade.Fade(255, -96)
 
 def get_screenpos(x, y):
@@ -55,7 +55,7 @@ while 1:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
-        elif event.type == pygame.VIDEORESIZE:
+        elif event.type == pygame.VIDEORESIZE: # This is currently broken on Linux (SDL2)
             winsize = event.size
             SCALE = 2 * (winsize[0] / 800)
             CENTER = [winsize[0] / 2, winsize[1] / 2]
@@ -72,6 +72,7 @@ while 1:
 
     player_rendered = False
 
+    # Render loops
     for z in range(player.z - 1, player.z + 1):
         if z < len(map.map):
             for y in range(len(map.map[z])):
@@ -106,9 +107,11 @@ while 1:
                 if z < len(map.sprites):
                     for sprite in map.sprites[z]:
                         if y == math.ceil(sprite.pos.y):
+                            # Do on_step within 10 meter radius
                             if vector.distance(sprite.pos, player.pos) <= 10:
                                 sprite.on_step(dtime, map, player)
 
+                            # Only render if on-screen
                             scaledsize = [round(SCALE * sprite.texture.width), round(SCALE * sprite.texture.height)]
                             pos = get_screenpos(sprite.pos.x, sprite.pos.y)
                             if pos[0] + scaledsize[0] >= 0 and pos[0] <= winsize[0] and \
@@ -116,7 +119,6 @@ while 1:
                                 screen.blit(pygame.transform.rotate(pygame.transform.scale(sprite.texture.frame, scaledsize), sprite.rot), pos)
 
     player.hud.render(screen, SCALE)
-
     player.fade.update(screen, dtime)
 
     pygame.display.update()

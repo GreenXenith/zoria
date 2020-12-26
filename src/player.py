@@ -152,6 +152,7 @@ class Player:
                 slash.texture.set_animation(0, 3, 5)
 
                 # Check for enemies
+				# This probably shouldnt be handled by the player but whatever
                 if self.z < len(map.sprites):
                     for sprite in map.sprites[self.z]:
                         if sprite.name[:6] == "enemy:":
@@ -160,6 +161,7 @@ class Player:
                                 sprite.vel = (sprite.vel * -2) + self.vel + (self.look * 2) # Knockback
                                 if sprite.hp <= 0:
                                     setat = round(sprite.pos)
+									# BUG: Corpses may remove keys and doorways
                                     map.set_tile(int(setat.x), int(setat.y), int(sprite.z), sprite.name + "_dead")
                                     map.remove_sprite(sprite.id)
                                     drop = rand.rand(0, 7)

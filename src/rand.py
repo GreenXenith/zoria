@@ -1,7 +1,6 @@
 # random.randint wrapper
 import random
-import time
 
 def rand(*args):
-    random.seed(time.clock())
+    random.seed()
     return random.randint(*args)

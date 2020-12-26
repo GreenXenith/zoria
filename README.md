@@ -19,4 +19,5 @@ The levels are infinite and persistent. The only limit is your RAM. World resets
 ## Known Bugs
 * Window resizing is mostly broken on Linux. This is a bug in SDL2. Using the maximize button _should_ work most of the time.
 * Slimes get stuck in corners. Probably due to the raycaster hitting the corner at the start (rounding issue?).
+* Corpses may remove keys and doorways.
 * Walls occasionally render improperly. Usually occurs when two rooms are close to each other diagonally.

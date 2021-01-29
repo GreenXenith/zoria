@@ -10,7 +10,7 @@ screen = pygame.display.set_mode(winsize, pygame.RESIZABLE)
 
 # Load all assets
 from . import assets
-for filename in os.listdir(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "assets")):
+for filename in os.listdir(os.path.join(os.getcwd(), "assets")):
     assets.load(filename)
 
 pygame.display.set_caption("Zoria")

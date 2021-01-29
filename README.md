@@ -2,7 +2,7 @@
 Real-time 2.5D RPG Dungeon Crawler using PyGame  
 
 ## Usage
-`python3 zoria.py`
+`python3 .`
 
 ## Controls
 | Key     | Action    |
